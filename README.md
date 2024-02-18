@@ -72,7 +72,7 @@
   
 - **Database**: PostgreSQL
 ## Contributing
-> You are welcome for contribution! If you'd like to contribute to AquaSense Network, please follow these [Contribution guidelines](Documentation/CONTRIBUTING.md).
+> You are welcome for contribution! If you'd like to contribute to AquaSense Network, please follow these [Contribution guidelines](./CONTRIBUTING.md).
 
 
 ## Support
@@ -86,4 +86,4 @@
 > 
 >    Together, we can explore innovative ways to further improve our platform ! 
 ## License
->This project is licensed under the [MIT License](Documentation/).
+>This project is licensed under the [MIT License](./LICENCE).
