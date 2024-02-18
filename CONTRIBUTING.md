@@ -68,4 +68,6 @@
 
     ![Alt text](images/image-12.png)
 
+> [!NOTE]
+> Make sure you have network connectivity while doing all these operations.\
 > [Visit github docs to learn more about reviewing request.](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews)
