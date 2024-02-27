@@ -270,4 +270,4 @@ CREATE TABLE IF NOT EXISTS dam_log (
     water_level INTEGER NOT NULL,
     timestamp TIMESTAMP NOT NULL
 );
->>>>>>> 3850d90f4a00256709446e72b6ac571aaff3a2ff
+
