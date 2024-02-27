@@ -5,6 +5,25 @@ CREATE TABLE IF NOT EXISTS Location (
     Longitude FLOAT
 );
 
+CREATE TABLE IF NOT EXISTS Users(
+    Username VARCHAR PRIMARY KEY,
+    Password VARCHAR NOT NULL,
+    Email VARCHAR,
+    Phone_No VARCHAR,
+    Gender CHAR,
+    LocationID INTEGER,
+    Admin BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+);
+
+CREATE TABLE IF NOT EXISTS Admins (
+    AdminID VARCHAR PRIMARY KEY,
+    Username VARCHAR,
+    Designation VARCHAR,
+    FOREIGN KEY (Username) REFERENCES Users(Username),
+    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+);
+
 CREATE TABLE IF NOT EXISTS Node (
     NodeID VARCHAR PRIMARY KEY,
     Latitude FLOAT,
@@ -38,7 +57,7 @@ CREATE TABLE IF NOT EXISTS Connection (
     OwnerID INTEGER,
     FOREIGN KEY (LocationID) REFERENCES Location(LocationID),
     FOREIGN KEY (SourceID) REFERENCES Node(NodeID),
-    FOREIGN KEY (OwnerID) REFERENCES User(Username)
+    FOREIGN KEY (OwnerID) REFERENCES Users(Username)
 );
 
 CREATE TABLE IF NOT EXISTS Complaints (
@@ -62,25 +81,6 @@ CREATE TABLE IF NOT EXISTS Notifications (
     Description TEXT,
     NotificationDate TIMESTAMP,
     Is_Live BOOLEAN DEFAULT TRUE
-);
-
-CREATE TABLE IF NOT EXISTS Admins (
-    AdminID VARCHAR PRIMARY KEY,
-    Username VARCHAR,
-    Designation VARCHAR,
-    FOREIGN KEY (Username) REFERENCES Users(Username),
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
-);
-
-CREATE TABLE IF NOT EXISTS User (
-    Username VARCHAR PRIMARY KEY,
-    Password VARCHAR NOT NULL,
-    Email VARCHAR,
-    Phone_No VARCHAR,
-    Gender CHAR,
-    LocationID INTEGER,
-    Admin BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
 );
 
 CREATE TABLE IF NOT EXISTS Applications (
