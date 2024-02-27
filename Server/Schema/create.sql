@@ -118,3 +118,33 @@ CREATE TABLE IF NOT EXISTS ApplicationLog (
     Username VARCHAR,
     FOREIGN KEY (ApplicationID) REFERENCES Applications(ApplicationID)
 );
+
+CREATE TABLE IF NOT EXISTS Tank (
+    tank_id SERIAL PRIMARY KEY,
+    tank_name VARCHAR(255) NOT NULL,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    capacity INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Dam (
+    dam_id SERIAL PRIMARY KEY,
+    dam_name VARCHAR NOT NULL,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    capacity INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS tank_log (
+    log_id SERIAL PRIMARY KEY,
+    tank_id INTEGER REFERENCES Tank(tank_id) NOT NULL,
+    water_level INTEGER NOT NULL,
+    timestamp TIMESTAMP NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS dam_log (
+    log_id SERIAL PRIMARY KEY,
+    dam_id INTEGER REFERENCES Dam(dam_id) NOT NULL,
+    water_level INTEGER NOT NULL,
+    timestamp TIMESTAMP NOT NULL
+);
