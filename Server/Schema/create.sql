@@ -1,12 +1,35 @@
-<<<<<<< HEAD
-CREATE TABLE IF NOT EXISTS Location (
+DROP TABLE IF EXISTS DamLog;
+DROP TABLE IF EXISTS TankLog;
+DROP TABLE IF EXISTS Dam;
+DROP TABLE IF EXISTS Tank;
+DROP TABLE IF EXISTS ApplicationLog;
+DROP TABLE IF EXISTS NotificationLog;
+DROP TABLE IF EXISTS ComplaintLog;
+DROP TABLE IF EXISTS Applications;
+DROP TABLE IF EXISTS Connection;
+DROP TABLE IF EXISTS Notifications;
+DROP TABLE IF EXISTS Complaints;
+DROP TABLE IF EXISTS Pipelines;
+DROP TABLE IF EXISTS Node;
+DROP TABLE IF EXISTS Admins;
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Locations;
+DROP TABLE IF EXISTS PipeFlowLog;
+DROP TABLE IF EXISTS PipeFlow;
+DROP TABLE IF EXISTS FailureLog;
+DROP TABLE IF EXISTS Failure;
+DROP TABLE IF EXISTS WaterTimetable;
+
+
+
+CREATE TABLE Locations (
     LocationID SERIAL PRIMARY KEY,
     Name VARCHAR,
     Latitude FLOAT,
     Longitude FLOAT
 );
 
-CREATE TABLE IF NOT EXISTS Users(
+CREATE TABLE Users(
     Username VARCHAR PRIMARY KEY,
     Password VARCHAR NOT NULL,
     Email VARCHAR,
@@ -14,18 +37,19 @@ CREATE TABLE IF NOT EXISTS Users(
     Gender CHAR,
     LocationID INTEGER,
     Admin BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
 );
 
-CREATE TABLE IF NOT EXISTS Admins (
+CREATE TABLE Admins (
     AdminID VARCHAR PRIMARY KEY,
     Username VARCHAR,
+    LocationID INTEGER,
     Designation VARCHAR,
     FOREIGN KEY (Username) REFERENCES Users(Username),
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
 );
 
-CREATE TABLE IF NOT EXISTS Node (
+CREATE TABLE Node (
     NodeID VARCHAR PRIMARY KEY,
     Latitude FLOAT,
     Longitude FLOAT,
@@ -35,10 +59,10 @@ CREATE TABLE IF NOT EXISTS Node (
     Flow FLOAT,
     Pressure FLOAT,
     FOREIGN KEY (ParentID) REFERENCES Node(NodeID),
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
 );
 
-CREATE TABLE IF NOT EXISTS Pipelines (
+CREATE TABLE Pipelines (
     PipelineID VARCHAR PRIMARY KEY,
     End1 VARCHAR,
     End2 VARCHAR,
@@ -46,22 +70,22 @@ CREATE TABLE IF NOT EXISTS Pipelines (
     LocationID INTEGER,
     FOREIGN KEY (End1) REFERENCES Node(NodeID),
     FOREIGN KEY (End2) REFERENCES Node(NodeID),
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
 );
 
-CREATE TABLE IF NOT EXISTS Connection (
+CREATE TABLE Connection (
     ConnectionID SERIAL PRIMARY KEY,
     Latitude FLOAT,
     Longitude FLOAT,
     LocationID INTEGER,
     SourceID VARCHAR,
-    OwnerID INTEGER,
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID),
+    OwnerID VARCHAR,
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID),
     FOREIGN KEY (SourceID) REFERENCES Node(NodeID),
     FOREIGN KEY (OwnerID) REFERENCES Users(Username)
 );
 
-CREATE TABLE IF NOT EXISTS Complaints (
+CREATE TABLE Complaints (
     ComplaintID SERIAL PRIMARY KEY,
     LocationID INTEGER,
     Latitude FLOAT,
@@ -73,175 +97,58 @@ CREATE TABLE IF NOT EXISTS Complaints (
     Description TEXT,
     Is_Addressed BOOLEAN DEFAULT FALSE,
     Is_Transferred BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+    FOREIGN KEY (ComplaintantID) REFERENCES Users(Username),
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
 );
 
-CREATE TABLE IF NOT EXISTS Notifications (
+CREATE TABLE Notifications (
     NotificationID SERIAL PRIMARY KEY,
     Title VARCHAR,
     Description TEXT,
     NotificationDate TIMESTAMP,
-    Is_Live BOOLEAN DEFAULT TRUE
+    Is_Live BOOLEAN DEFAULT TRUE,
+    Issuer VARCHAR,
+    FOREIGN KEY (Issuer) REFERENCES Users(Username)
 );
 
-CREATE TABLE IF NOT EXISTS Applications (
+CREATE TABLE Applications (
     ApplicationID SERIAL PRIMARY KEY,
-    UserID INTEGER,
+    UserID VARCHAR,
     ApplicationDate TIMESTAMP,
     ConnectionType VARCHAR,
     Address TEXT,
-    Status VARCHAR
+    Status VARCHAR,
+    FOREIGN KEY (UserID) REFERENCES Users(Username)
 );
 
-CREATE TABLE IF NOT EXISTS ComplaintLog (
+CREATE TABLE ComplaintLog (
     LogID SERIAL PRIMARY KEY,
     Timestamp TIMESTAMP,
     ComplaintID INTEGER,
     ComplaintAction VARCHAR,
-    Username VARCHAR,
-    FOREIGN KEY (ComplaintID) REFERENCES Complaints(ComplaintID)
+    Username VARCHAR
+    -- FOREIGN KEY (ComplaintID) REFERENCES Complaints(ComplaintID)
 );
 
-CREATE TABLE IF NOT EXISTS NotificationLog (
+CREATE TABLE NotificationLog (
     LogID SERIAL PRIMARY KEY,
     Timestamp TIMESTAMP,
     NotificationID INTEGER,
     NotificationAction VARCHAR,
-    Username VARCHAR,
-    FOREIGN KEY (ComplaintID) REFERENCES Complaints(ComplaintID)
+    Username VARCHAR
+    -- FOREIGN KEY (NotificationID) REFERENCES Notifications(NotificationID)
 );
 
-CREATE TABLE IF NOT EXISTS ApplicationLog (
+CREATE TABLE ApplicationLog (
     LogID SERIAL PRIMARY KEY,
     Timestamp TIMESTAMP,
     ApplicationID INTEGER,
     ApplicationAction VARCHAR,
-    Username VARCHAR,
-    FOREIGN KEY (ApplicationID) REFERENCES Applications(ApplicationID)
-);
-=======
-CREATE TABLE IF NOT EXISTS Location (
-    LocationID SERIAL PRIMARY KEY,
-    Name VARCHAR,
-    Latitude FLOAT,
-    Longitude FLOAT
+    Username VARCHAR
+    -- FOREIGN KEY (ApplicationID) REFERENCES Applications(ApplicationID)
 );
 
-CREATE TABLE IF NOT EXISTS Node (
-    NodeID VARCHAR PRIMARY KEY,
-    Latitude FLOAT,
-    Longitude FLOAT,
-    ParentID VARCHAR,
-    Status BOOLEAN DEFAULT TRUE,
-    LocationID INTEGER,
-    Flow FLOAT,
-    Pressure FLOAT,
-    FOREIGN KEY (ParentID) REFERENCES Node(NodeID),
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
-);
-
-CREATE TABLE IF NOT EXISTS Pipelines (
-    PipelineID VARCHAR PRIMARY KEY,
-    End1 VARCHAR,
-    End2 VARCHAR,
-    Length FLOAT,
-    LocationID INTEGER,
-    FOREIGN KEY (End1) REFERENCES Node(NodeID),
-    FOREIGN KEY (End2) REFERENCES Node(NodeID),
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
-);
-
-CREATE TABLE IF NOT EXISTS Connection (
-    ConnectionID SERIAL PRIMARY KEY,
-    Latitude FLOAT,
-    Longitude FLOAT,
-    LocationID INTEGER,
-    SourceID VARCHAR,
-    OwnerID INTEGER,
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID),
-    FOREIGN KEY (SourceID) REFERENCES Node(NodeID),
-    FOREIGN KEY (OwnerID) REFERENCES User(Username)
-);
-
-CREATE TABLE IF NOT EXISTS Complaints (
-    ComplaintID SERIAL PRIMARY KEY,
-    LocationID INTEGER,
-    Latitude FLOAT,
-    Longitude FLOAT,
-    ComplaintantID VARCHAR,
-    ComplaintDate TIMESTAMP,
-    Fault_type VARCHAR,
-    Title VARCHAR,
-    Description TEXT,
-    Is_Addressed BOOLEAN DEFAULT FALSE,
-    Is_Transferred BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
-);
-
-CREATE TABLE IF NOT EXISTS Notifications (
-    NotificationID SERIAL PRIMARY KEY,
-    Title VARCHAR,
-    Description TEXT,
-    NotificationDate TIMESTAMP,
-    Is_Live BOOLEAN DEFAULT TRUE
-);
-
-CREATE TABLE IF NOT EXISTS Admins (
-    AdminID VARCHAR PRIMARY KEY,
-    Username VARCHAR,
-    Designation VARCHAR,
-    FOREIGN KEY (Username) REFERENCES Users(Username),
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
-);
-
-CREATE TABLE IF NOT EXISTS User (
-    Username VARCHAR PRIMARY KEY,
-    Password VARCHAR NOT NULL,
-    Email VARCHAR,
-    Phone_No VARCHAR,
-    Gender CHAR,
-    LocationID INTEGER,
-    Admin BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
-);
-
-CREATE TABLE IF NOT EXISTS Applications (
-    ApplicationID SERIAL PRIMARY KEY,
-    UserID INTEGER,
-    ApplicationDate TIMESTAMP,
-    ConnectionType VARCHAR,
-    Address TEXT,
-    Status VARCHAR
-);
-
-CREATE TABLE IF NOT EXISTS ComplaintLog (
-    LogID SERIAL PRIMARY KEY,
-    Timestamp TIMESTAMP,
-    ComplaintID INTEGER,
-    ComplaintAction VARCHAR,
-    Username VARCHAR,
-    FOREIGN KEY (ComplaintID) REFERENCES Complaints(ComplaintID)
-);
-
-CREATE TABLE IF NOT EXISTS NotificationLog (
-    LogID SERIAL PRIMARY KEY,
-    Timestamp TIMESTAMP,
-    NotificationID INTEGER,
-    NotificationAction VARCHAR,
-    Username VARCHAR,
-    FOREIGN KEY (ComplaintID) REFERENCES Complaints(ComplaintID)
-);
-
-CREATE TABLE IF NOT EXISTS ApplicationLog (
-    LogID SERIAL PRIMARY KEY,
-    Timestamp TIMESTAMP,
-    ApplicationID INTEGER,
-    ApplicationAction VARCHAR,
-    Username VARCHAR,
-    FOREIGN KEY (ApplicationID) REFERENCES Applications(ApplicationID)
-);
-
-CREATE TABLE IF NOT EXISTS Tank (
+CREATE TABLE Tank (
     tank_id SERIAL PRIMARY KEY,
     tank_name VARCHAR(255) NOT NULL,
     latitude DOUBLE PRECISION NOT NULL,
@@ -249,7 +156,7 @@ CREATE TABLE IF NOT EXISTS Tank (
     capacity INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Dam (
+CREATE TABLE Dam (
     dam_id SERIAL PRIMARY KEY,
     dam_name VARCHAR NOT NULL,
     latitude DOUBLE PRECISION NOT NULL,
@@ -257,17 +164,58 @@ CREATE TABLE IF NOT EXISTS Dam (
     capacity INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS tank_log (
+CREATE TABLE TankLog (
     log_id SERIAL PRIMARY KEY,
-    tank_id INTEGER REFERENCES Tank(tank_id) NOT NULL,
+    tank_id INTEGER, --REFERENCES Tank(tank_id) NOT NULL,
     water_level INTEGER NOT NULL,
     timestamp TIMESTAMP NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS dam_log (
+CREATE TABLE DamLog (
     log_id SERIAL PRIMARY KEY,
-    dam_id INTEGER REFERENCES Dam(dam_id) NOT NULL,
+    dam_id INTEGER, --REFERENCES Dam(dam_id) NOT NULL,
     water_level INTEGER NOT NULL,
     timestamp TIMESTAMP NOT NULL
 );
 
+CREATE TABLE Failure (
+    FailureID SERIAL PRIMARY KEY,
+    PipeID VARCHAR,
+    Time_Stamp TIMESTAMP,
+    FailureType VARCHAR,
+    IsSolved BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (PipeID) REFERENCES Pipelines(PipelineID)
+);
+
+CREATE TABLE FailureLog (
+    LogID SERIAL PRIMARY KEY,
+    Time_Stamp TIMESTAMP,
+    FailureID INTEGER,
+    Action VARCHAR,
+    Username VARCHAR
+);
+
+CREATE TABLE PipeFlow (
+    PipelineID VARCHAR,
+    Last_Updated TIMESTAMP,
+    Flow FLOAT,
+    Pressure FLOAT,
+    FOREIGN KEY (PipelineID) REFERENCES Pipelines(PipelineID)
+);
+
+CREATE TABLE PipeFlowLog(
+    PipelineID VARCHAR,
+    Time_Stamp TIMESTAMP,
+    Flow FLOAT,
+    Pressure FLOAT,
+    FOREIGN KEY (PipelineID) REFERENCES Pipelines(PipelineID)
+);
+
+CREATE TABLE WaterTimetable (
+    TimetableID SERIAL PRIMARY KEY,
+    LocationID INTEGER,
+    Start_Time TIME,
+    End_Time TIME,
+    AllDays BOOLEAN,
+    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
+);

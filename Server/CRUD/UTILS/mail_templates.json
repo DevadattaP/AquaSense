@@ -1,0 +1,31 @@
+{
+    "COMPLAINT_CONFIRMATION": {
+        "SUBJECT": "Confirmation: Your Complaint Submission",
+        "TEXT": "Dear [User],\n\nThank you for submitting your complaint regarding [ComplaintType]. We have received it successfully and our team is now reviewing it.\n\nComplaint ID: [ComplaintID]\nLocation: [Location]\nDate: [ComplaintDate]\n\nWe appreciate your cooperation and patience while we investigate the issue. If you have any further questions or concerns, please feel free to contact us.\n\nBest regards,\nAquaSense"
+    },
+
+    "COMPLAINT_RESOLUTION": {
+        "SUBJECT": "Your complaint has been resolved",
+        "TEXT": "Dear [User],\n\nWe are pleased to inform you that your complaint (ID: [ComplaintID]) regarding [ComplaintType] submitted on [ComplaintDate] has been resolved. Please do not hesitate to reach out if you need further assistance.\n\nBest regards,\nAquaSense"
+    },
+
+    "COMPLAINT_TRANSFER": {
+        "SUBJECT": "Your complaint has been transferred",
+        "TEXT": "Dear [User],\n\nWe would like to inform you that your complaint (ID: [ComplaintID]) regarding [ComplaintType] submitted on [ComplaintDate] has been transferred to higher authorities for consideration. We appreciate your patience and understanding in this matter.\n\nBest regards,\nAquaSense"
+    },
+
+    "APPLICATION_CONFIRMATION": {
+        "SUBJECT": "Confirmation: Your Application Submission",
+        "TEXT": "Dear [User],\n\nThank you for submitting your application for [ConnectionType]. We have received it successfully and our team is now reviewing it.\n\nApplication ID: [ApplicationID]\nDate: [ApplicationDate]\n\nWe appreciate your interest and patience. If you have any questions or need further assistance, please feel free to contact us.\n\nBest regards,\nAquaSense"
+    },
+
+    "APPLICATION_ACCEPTANCE": {
+        "SUBJECT": "Your application has been accepted",
+        "TEXT": "Dear [User],\n\nWe are pleased to inform you that your application for [ConnectionType] submitted on [ApplicationDate] has been accepted. Congratulations!\n\nApplication ID: [ApplicationID]\n\nPlease follow the instructions provided to proceed further. If you have any questions, feel free to reach out.\n\nBest regards,\nAquaSense"
+    },
+
+    "APPLICATION_REJECTION": {
+        "SUBJECT": "Your application has been rejected",
+        "TEXT": "Dear [User],\n\nWe regret to inform you that your application for [ConnectionType] submitted on [ApplicationDate] has been rejected.\n\nApplication ID: [ApplicationID]\n\nWe appreciate your interest and encourage you to apply again in the future. If you have any questions or need further clarification, please feel free to contact us.\n\nBest regards,\nAquaSense"
+    }
+}
