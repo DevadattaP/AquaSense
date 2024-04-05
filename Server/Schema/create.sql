@@ -68,6 +68,7 @@ CREATE TABLE Pipelines (
     End2 VARCHAR,
     Length FLOAT,
     LocationID INTEGER,
+    linestring geometry(LineString, 4326);
     FOREIGN KEY (End1) REFERENCES Node(NodeID),
     FOREIGN KEY (End2) REFERENCES Node(NodeID),
     FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
