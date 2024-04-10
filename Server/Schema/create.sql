@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS Zones;
 
 CREATE TABLE Zones (
     ZoneID SERIAL PRIMARY KEY,
-    Name VARCHAR NOT NULL
+    Name VARCHAR NOT NULL,
     Latitude FLOAT,
     Longitude FLOAT
 );
@@ -178,8 +178,7 @@ CREATE TABLE TankLog (
     log_id SERIAL PRIMARY KEY,
     tank_id INTEGER, --REFERENCES Tank(tank_id) NOT NULL,
     water_level INTEGER NOT NULL,
-    time_stamp TIMESTAMP NOT NULL,
-
+    time_stamp TIMESTAMP NOT NULL
 );
 
 CREATE TABLE DamLog (
