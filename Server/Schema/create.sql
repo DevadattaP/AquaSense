@@ -1,32 +1,40 @@
-DROP TABLE IF EXISTS DamLog;
+DROP TABLE IF EXISTS WaterTimetable;
+DROP TABLE IF EXISTS FailureLog;
+DROP TABLE IF EXISTS Failure;
+DROP TABLE IF EXISTS PipeFlowLog;
+DROP TABLE IF EXISTS PipeFlow;
 DROP TABLE IF EXISTS TankLog;
-DROP TABLE IF EXISTS Dam;
+DROP TABLE IF EXISTS DamLog;
 DROP TABLE IF EXISTS Tank;
+DROP TABLE IF EXISTS Dam;
 DROP TABLE IF EXISTS ApplicationLog;
 DROP TABLE IF EXISTS NotificationLog;
 DROP TABLE IF EXISTS ComplaintLog;
 DROP TABLE IF EXISTS Applications;
-DROP TABLE IF EXISTS Connection;
 DROP TABLE IF EXISTS Notifications;
 DROP TABLE IF EXISTS Complaints;
+DROP TABLE IF EXISTS Connection;
 DROP TABLE IF EXISTS Pipelines;
 DROP TABLE IF EXISTS Node;
 DROP TABLE IF EXISTS Admins;
 DROP TABLE IF EXISTS Users;
-DROP TABLE IF EXISTS Locations;
-DROP TABLE IF EXISTS PipeFlowLog;
-DROP TABLE IF EXISTS PipeFlow;
-DROP TABLE IF EXISTS FailureLog;
-DROP TABLE IF EXISTS Failure;
-DROP TABLE IF EXISTS WaterTimetable;
+DROP TABLE IF EXISTS Ward;
+DROP TABLE IF EXISTS Zones;
 
-
-
-CREATE TABLE Locations (
-    LocationID SERIAL PRIMARY KEY,
-    Name VARCHAR,
+CREATE TABLE Zones (
+    ZoneID SERIAL PRIMARY KEY,
+    Name VARCHAR NOT NULL
     Latitude FLOAT,
     Longitude FLOAT
+);
+
+CREATE TABLE Ward (
+    WardID SERIAL PRIMARY KEY,
+    Name VARCHAR,
+    Latitude FLOAT,
+    Longitude FLOAT,
+    ZoneID INTEGER,
+    FOREIGN KEY (ZoneID) REFERENCES Zones(ZoneID)
 );
 
 CREATE TABLE Users(
@@ -37,7 +45,7 @@ CREATE TABLE Users(
     Gender CHAR,
     LocationID INTEGER,
     Admin BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
+    FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
 );
 
 CREATE TABLE Admins (
@@ -46,7 +54,7 @@ CREATE TABLE Admins (
     LocationID INTEGER,
     Designation VARCHAR,
     FOREIGN KEY (Username) REFERENCES Users(Username),
-    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
+    FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
 );
 
 CREATE TABLE Node (
@@ -59,7 +67,7 @@ CREATE TABLE Node (
     Flow FLOAT,
     Pressure FLOAT,
     FOREIGN KEY (ParentID) REFERENCES Node(NodeID),
-    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
+    FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
 );
 
 CREATE TABLE Pipelines (
@@ -67,11 +75,12 @@ CREATE TABLE Pipelines (
     End1 VARCHAR,
     End2 VARCHAR,
     Length FLOAT,
-    LocationID INTEGER,
-    linestring geometry(LineString, 4326);
+    Diameter FLOAT,
+    WardID INTEGER,
+    linestring geometry(LineString, 4326),
     FOREIGN KEY (End1) REFERENCES Node(NodeID),
     FOREIGN KEY (End2) REFERENCES Node(NodeID),
-    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
+    FOREIGN KEY (WardID) REFERENCES Ward(WardID)
 );
 
 CREATE TABLE Connection (
@@ -81,7 +90,7 @@ CREATE TABLE Connection (
     LocationID INTEGER,
     SourceID VARCHAR,
     OwnerID VARCHAR,
-    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID),
+    FOREIGN KEY (LocationID) REFERENCES Ward(WardID),
     FOREIGN KEY (SourceID) REFERENCES Node(NodeID),
     FOREIGN KEY (OwnerID) REFERENCES Users(Username)
 );
@@ -99,7 +108,7 @@ CREATE TABLE Complaints (
     Is_Addressed BOOLEAN DEFAULT FALSE,
     Is_Transferred BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (ComplaintantID) REFERENCES Users(Username),
-    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
+    FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
 );
 
 CREATE TABLE Notifications (
@@ -169,14 +178,15 @@ CREATE TABLE TankLog (
     log_id SERIAL PRIMARY KEY,
     tank_id INTEGER, --REFERENCES Tank(tank_id) NOT NULL,
     water_level INTEGER NOT NULL,
-    timestamp TIMESTAMP NOT NULL
+    time_stamp TIMESTAMP NOT NULL,
+
 );
 
 CREATE TABLE DamLog (
     log_id SERIAL PRIMARY KEY,
     dam_id INTEGER, --REFERENCES Dam(dam_id) NOT NULL,
     water_level INTEGER NOT NULL,
-    timestamp TIMESTAMP NOT NULL
+    time_stamp TIMESTAMP NOT NULL
 );
 
 CREATE TABLE Failure (
@@ -218,5 +228,5 @@ CREATE TABLE WaterTimetable (
     Start_Time TIME,
     End_Time TIME,
     AllDays BOOLEAN,
-    FOREIGN KEY (LocationID) REFERENCES Locations(LocationID)
+    FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
 );
