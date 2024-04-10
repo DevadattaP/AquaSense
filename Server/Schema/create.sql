@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS ComplaintLog;
 DROP TABLE IF EXISTS Applications;
 DROP TABLE IF EXISTS Notifications;
 DROP TABLE IF EXISTS Complaints;
-DROP TABLE IF EXISTS Connection;
+DROP TABLE IF EXISTS Connections;
 DROP TABLE IF EXISTS Pipelines;
 DROP TABLE IF EXISTS Node;
 DROP TABLE IF EXISTS Admins;
@@ -83,7 +83,7 @@ CREATE TABLE Pipelines (
     FOREIGN KEY (WardID) REFERENCES Ward(WardID)
 );
 
-CREATE TABLE Connection (
+CREATE TABLE Connections (
     ConnectionID SERIAL PRIMARY KEY,
     Latitude FLOAT,
     Longitude FLOAT,
