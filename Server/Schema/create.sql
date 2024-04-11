@@ -22,18 +22,16 @@ DROP TABLE IF EXISTS Ward;
 DROP TABLE IF EXISTS Zones;
 
 CREATE TABLE Zones (
-    ZoneID SERIAL PRIMARY KEY,
+    ZoneID VARCHAR PRIMARY KEY,
     Name VARCHAR NOT NULL,
-    Latitude FLOAT,
-    Longitude FLOAT
+    center geometry(Point, 4326)
 );
 
 CREATE TABLE Ward (
-    WardID SERIAL PRIMARY KEY,
+    WardID VARCHAR PRIMARY KEY,
     Name VARCHAR,
-    Latitude FLOAT,
-    Longitude FLOAT,
-    ZoneID INTEGER,
+    center geometry(Point, 4326),
+    ZoneID VARCHAR,
     FOREIGN KEY (ZoneID) REFERENCES Zones(ZoneID)
 );
 
@@ -43,7 +41,7 @@ CREATE TABLE Users(
     Email VARCHAR,
     Phone_No VARCHAR,
     Gender CHAR,
-    LocationID INTEGER,
+    LocationID VARCHAR,
     Admin BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
 );
@@ -51,7 +49,7 @@ CREATE TABLE Users(
 CREATE TABLE Admins (
     AdminID VARCHAR PRIMARY KEY,
     Username VARCHAR,
-    LocationID INTEGER,
+    LocationID VARCHAR,
     Designation VARCHAR,
     FOREIGN KEY (Username) REFERENCES Users(Username),
     FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
@@ -59,11 +57,10 @@ CREATE TABLE Admins (
 
 CREATE TABLE Node (
     NodeID VARCHAR PRIMARY KEY,
-    Latitude FLOAT,
-    Longitude FLOAT,
+    coords geometry(Point, 4326),
     ParentID VARCHAR,
     Status BOOLEAN DEFAULT TRUE,
-    LocationID INTEGER,
+    LocationID VARCHAR,
     Flow FLOAT,
     Pressure FLOAT,
     FOREIGN KEY (ParentID) REFERENCES Node(NodeID),
@@ -76,7 +73,7 @@ CREATE TABLE Pipelines (
     End2 VARCHAR,
     Length FLOAT,
     Diameter FLOAT,
-    WardID INTEGER,
+    WardID VARCHAR,
     linestring geometry(LineString, 4326),
     FOREIGN KEY (End1) REFERENCES Node(NodeID),
     FOREIGN KEY (End2) REFERENCES Node(NodeID),
@@ -85,9 +82,8 @@ CREATE TABLE Pipelines (
 
 CREATE TABLE Connections (
     ConnectionID SERIAL PRIMARY KEY,
-    Latitude FLOAT,
-    Longitude FLOAT,
-    LocationID INTEGER,
+    coords geometry(Point, 4326),
+    LocationID VARCHAR,
     SourceID VARCHAR,
     OwnerID VARCHAR,
     FOREIGN KEY (LocationID) REFERENCES Ward(WardID),
@@ -97,9 +93,8 @@ CREATE TABLE Connections (
 
 CREATE TABLE Complaints (
     ComplaintID SERIAL PRIMARY KEY,
-    LocationID INTEGER,
-    Latitude FLOAT,
-    Longitude FLOAT,
+    LocationID VARCHAR,
+    coords geometry(Point, 4326),
     ComplaintantID VARCHAR,
     ComplaintDate TIMESTAMP,
     Fault_type VARCHAR,
@@ -223,7 +218,7 @@ CREATE TABLE PipeFlowLog(
 
 CREATE TABLE WaterTimetable (
     TimetableID SERIAL PRIMARY KEY,
-    LocationID INTEGER,
+    LocationID VARCHAR,
     Start_Time TIME,
     End_Time TIME,
     AllDays BOOLEAN,
