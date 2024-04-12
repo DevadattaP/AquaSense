@@ -145,7 +145,7 @@ def nearest_location(lat, long):
         # location = location['response']
         return haversine(lat, long, location['latitude'], location['longitude'])
 
-    locs = execute_select("SELECT LocationID, Latitude, Longitude FROM Locations")['response']
+    locs = execute_select("SELECT WardID, ST_Y(center), ST_X(center) FROM Wards")['response']
     loc = min(locs, key=least_dist)
     return loc
 
@@ -159,7 +159,7 @@ def add_complaint(complaint: Complaint):
         latitude, longitude = complaint.latitude, complaint.longitude
     elif complaint.location_id and not complaint.latitude:
         location = complaint.location_id
-        loc_result = execute_select(f"SELECT ST_Y(center), ST_X(center) FROM Locations WHERE LocationID = {location}")
+        loc_result = execute_select(f"SELECT ST_Y(center), ST_X(center) FROM Wards WHERE WardID = {location}")
         if loc_result['status']=='success' and loc_result['response']:
             loc = loc_result["response"]
         else:
