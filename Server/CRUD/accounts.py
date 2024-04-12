@@ -12,7 +12,7 @@ class User(BaseModel):
     Email: str
     Phone_No: str
     Gender: str
-    LocationID: int
+    LocationID: str
     Admin: Optional[bool] = False
 
 
@@ -26,7 +26,7 @@ def sign_up(user: User):
     
     query = f"""
     INSERT INTO Users (Username, Password, Email, Phone_No, Gender, LocationID, Admin)
-    VALUES ('{user.Username}', '{hashed_pass}', '{user.Email}', '{user.Phone_No}', '{user.Gender}', {user.LocationID}, {user.Admin});
+    VALUES ('{user.Username}', '{hashed_pass}', '{user.Email}', '{user.Phone_No}', '{user.Gender}', '{user.LocationID}', {user.Admin});
     """
 
     return execute_query(query, message="User signed up successfully.")
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     "Email": "abhyasakarita@gmail.com",
     "Phone_No": "1234567890",
     "Gender": "M",
-    "LocationID": 3,
+    "LocationID": "W048",
     "Admin": False
     }
     print(sign_up(User(**user_data)))

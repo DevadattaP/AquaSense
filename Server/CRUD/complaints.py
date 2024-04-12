@@ -10,7 +10,7 @@ from math import sin, cos, asin, radians, sqrt
 
 class Complaint(BaseModel):
     complaint_id: Optional[int] = None
-    location_id: Optional[int] = None
+    location_id: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     complaintant: str 
@@ -145,8 +145,14 @@ def nearest_location(lat, long):
         # location = location['response']
         return haversine(lat, long, location['latitude'], location['longitude'])
 
-    locs = execute_select("SELECT WardID, ST_Y(center), ST_X(center) FROM Wards")['response']
+    zones = execute_select("SELECT ZoneID, ST_Y(center) as latitude, ST_X(center) as longitude FROM Zones")['response']
+    print(zones)
+    zone_id = min(zones, key=least_dist)['zoneid']
+    print(zone_id)
+    locs = execute_select(f"SELECT WardID, ST_Y(center) as latitude, ST_X(center) as longitude FROM Ward WHERE ZoneID='{zone_id}'")['response']
+    print(locs)
     loc = min(locs, key=least_dist)
+    print(loc)
     return loc
 
 
@@ -155,11 +161,13 @@ def add_complaint(complaint: Complaint):
         location = complaint.location_id
         latitude, longitude = complaint.latitude, complaint.longitude
     elif not complaint.location_id and complaint.latitude:
-        location = nearest_location(complaint.latitude, complaint.longitude)['locationid']
+        location = nearest_location(complaint.latitude, complaint.longitude)['wardid']
         latitude, longitude = complaint.latitude, complaint.longitude
     elif complaint.location_id and not complaint.latitude:
         location = complaint.location_id
-        loc_result = execute_select(f"SELECT ST_Y(center), ST_X(center) FROM Wards WHERE WardID = {location}")
+        print(location)
+        loc_result = execute_select(f"SELECT ST_Y(center) as latitude, ST_X(center) as longitude FROM Ward WHERE WardID = '{location}'")
+        print(loc_result)
         if loc_result['status']=='success' and loc_result['response']:
             loc = loc_result["response"]
         else:
@@ -169,13 +177,13 @@ def add_complaint(complaint: Complaint):
         raise ValueError("Neither location nor co-ordinates")
 
     query = f"""
-    INSERT INTO Complaints (LocationID, ComplaintantID, ComplaintDate, Latitude, Longitude, Fault_type, Title, Description)
-    VALUES ({location}, '{complaint.complaintant}', '{complaint.complaint_date}', {latitude}, {longitude},
+    INSERT INTO Complaints (LocationID, ComplaintantID, ComplaintDate, coords, Fault_type, Title, Description)
+    VALUES ('{location}', '{complaint.complaintant}', '{complaint.complaint_date}', ST_SetSRID(ST_MakePoint({longitude}, {latitude}), 4326),
     '{complaint.fault_type}', '{complaint.title}', '{complaint.description}');
     """
 
     email = execute_select(f"SELECT email FROM users WHERE username='{complaint.complaintant}'")['response']['email']
-    location_name = execute_select(f"SELECT name FROM Locations WHERE locationid = {location}")['response']['name']
+    location_name = execute_select(f"SELECT name FROM Ward WHERE WardID = '{location}'")['response']['name']
 
     complaint_id = execute_select("SELECT nextval('complaints_complaintid_seq')")['response']['nextval']-1
 
@@ -202,14 +210,16 @@ def add_complaint(complaint: Complaint):
 
 
 if __name__ == '__main__':
-    # complaint_data_2 = {
-    #     "location_id": 4,
-    #     "complaintant": "tatya_trump",
-    #     "complaint_date": datetime.now(),
-    #     "fault_type": "Water supply",
-    #     "title": "Water Supply Issue",
-    #     "description": "There is a problem with the water supply in my area."
-    # }
-    # print(add_complaint(Complaint(**complaint_data_2)))
+    complaint_data_2 = {
+        # "location_id": "W048",
+        "longitude": 83.02304,
+        "latitude": 25.32559,
+        "complaintant": "vansh_test",
+        "complaint_date": datetime.now(),
+        "fault_type": "Water supply",
+        "title": "Water Supply Issue",
+        "description": "There is a problem with the water supply in my area."
+    }
+    print(add_complaint(Complaint(**complaint_data_2)))
     # print(get_complaints(status='ALL'))
     pass
