@@ -210,16 +210,16 @@ def add_complaint(complaint: Complaint):
 
 
 if __name__ == '__main__':
-    complaint_data_2 = {
-        # "location_id": "W048",
-        "longitude": 83.02304,
-        "latitude": 25.32559,
-        "complaintant": "vansh_test",
-        "complaint_date": datetime.now(),
-        "fault_type": "Water supply",
-        "title": "Water Supply Issue",
-        "description": "There is a problem with the water supply in my area."
-    }
-    print(add_complaint(Complaint(**complaint_data_2)))
+    # complaint_data_2 = {
+    #     # "location_id": "W048",
+    #     "longitude": 83.02304,
+    #     "latitude": 25.32559,
+    #     "complaintant": "vansh_test",
+    #     "complaint_date": datetime.now(),
+    #     "fault_type": "Water supply",
+    #     "title": "Water Supply Issue",
+    #     "description": "There is a problem with the water supply in my area."
+    # }
+    # print(add_complaint(Complaint(**complaint_data_2)))
     # print(get_complaints(status='ALL'))
     pass

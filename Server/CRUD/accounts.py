@@ -53,14 +53,14 @@ def sign_in(login: Login):
 
 if __name__ == "__main__":
     pass
-    user_data = {
-    "Username": "vansh_test",
-    "Password": "password123",
-    "Email": "abhyasakarita@gmail.com",
-    "Phone_No": "1234567890",
-    "Gender": "M",
-    "LocationID": "W048",
-    "Admin": False
-    }
-    print(sign_up(User(**user_data)))
+    # user_data = {
+    # "Username": "vansh_test",
+    # "Password": "password123",
+    # "Email": "abhyasakarita@gmail.com",
+    # "Phone_No": "1234567890",
+    # "Gender": "M",
+    # "LocationID": "W048",
+    # "Admin": False
+    # }
+    # print(sign_up(User(**user_data)))
     # print(sign_in('johndoe', 'password13'))
