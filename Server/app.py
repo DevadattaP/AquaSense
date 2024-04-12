@@ -61,7 +61,7 @@ def getNotification(id: int):
 def createNotification(notification: notifications.Notification):
     return notifications.add_notification(notification)
 
-@app.put("/notification/{issuer}/{change}}/{id}")
+@app.put("/notification/{issuer}/{change}/{id}")
 def updateNotification(id: int, change: str, issuer: str):
     return notifications.change_notification(id, change, issuer)
 
