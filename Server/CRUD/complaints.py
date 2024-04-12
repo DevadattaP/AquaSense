@@ -159,7 +159,7 @@ def add_complaint(complaint: Complaint):
         latitude, longitude = complaint.latitude, complaint.longitude
     elif complaint.location_id and not complaint.latitude:
         location = complaint.location_id
-        loc_result = execute_select(f"SELECT Latitude, Longitude FROM Locations WHERE LocationID = {location}")
+        loc_result = execute_select(f"SELECT ST_Y(center), ST_X(center) FROM Locations WHERE LocationID = {location}")
         if loc_result['status']=='success' and loc_result['response']:
             loc = loc_result["response"]
         else:
