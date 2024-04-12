@@ -156,16 +156,14 @@ CREATE TABLE ApplicationLog (
 CREATE TABLE Tank (
     tank_id SERIAL PRIMARY KEY,
     tank_name VARCHAR(255) NOT NULL,
-    latitude DOUBLE PRECISION NOT NULL,
-    longitude DOUBLE PRECISION NOT NULL,
+    location geometry(Point, 4326) NOT NULL,
     capacity INTEGER NOT NULL
 );
 
 CREATE TABLE Dam (
     dam_id SERIAL PRIMARY KEY,
     dam_name VARCHAR NOT NULL,
-    latitude DOUBLE PRECISION NOT NULL,
-    longitude DOUBLE PRECISION NOT NULL,
+    location geometry(Point, 4326) NOT NULL,
     capacity INTEGER NOT NULL
 );
 
