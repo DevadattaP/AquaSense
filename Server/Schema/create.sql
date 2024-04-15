@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS postgis;
+
 DROP TABLE IF EXISTS WaterTimetable;
 DROP TABLE IF EXISTS FailureLog;
 DROP TABLE IF EXISTS Failure;
@@ -5,8 +7,12 @@ DROP TABLE IF EXISTS PipeFlowLog;
 DROP TABLE IF EXISTS PipeFlow;
 DROP TABLE IF EXISTS TankLog;
 DROP TABLE IF EXISTS DamLog;
+DROP TABLE IF EXISTS ReservLog;
+DROP TABLE IF EXISTS PumpLog;
 DROP TABLE IF EXISTS Tank;
 DROP TABLE IF EXISTS Dam;
+DROP TABLE IF EXISTS Reservoir;
+DROP TABLE IF EXISTS Pump;
 DROP TABLE IF EXISTS ApplicationLog;
 DROP TABLE IF EXISTS NotificationLog;
 DROP TABLE IF EXISTS ComplaintLog;
@@ -154,29 +160,60 @@ CREATE TABLE ApplicationLog (
 );
 
 CREATE TABLE Tank (
-    tank_id SERIAL PRIMARY KEY,
-    tank_name VARCHAR(255) NOT NULL,
+    tank_id VARCHAR PRIMARY KEY,
+    capacity INTEGER NOT NULL,
+	LocationID VARCHAR,
     coords geometry(Point, 4326) NOT NULL,
-    capacity INTEGER NOT NULL
+	FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
 );
 
-CREATE TABLE Dam (
-    dam_id SERIAL PRIMARY KEY,
-    dam_name VARCHAR NOT NULL,
+CREATE TABLE Pump (
+    pump_id VARCHAR PRIMARY KEY,
+    capacity INTEGER NOT NULL,
+	LocationID VARCHAR,
     coords geometry(Point, 4326) NOT NULL,
-    capacity INTEGER NOT NULL
+	FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
+);
+
+CREATE TABLE Reservoir (
+    reserv_id VARCHAR PRIMARY KEY,
+    capacity INTEGER NOT NULL,
+	LocationID VARCHAR,
+    coords geometry(Point, 4326) NOT NULL,
+	FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
+);
+
+
+CREATE TABLE Dam (
+    dam_id VARCHAR PRIMARY KEY,
+    capacity INTEGER NOT NULL,
+    coords geometry(Point, 4326) NOT NULL
 );
 
 CREATE TABLE TankLog (
     log_id SERIAL PRIMARY KEY,
-    tank_id INTEGER, --REFERENCES Tank(tank_id) NOT NULL,
+    tank_id VARCHAR, --REFERENCES Tank(tank_id) NOT NULL,
+    water_level INTEGER NOT NULL,
+    time_stamp TIMESTAMP NOT NULL
+);
+
+CREATE TABLE PumpLog (
+    log_id SERIAL PRIMARY KEY,
+    pump_id VARCHAR, --REFERENCES Tank(tank_id) NOT NULL,
+    status INTEGER NOT NULL,
+    time_stamp TIMESTAMP NOT NULL
+);
+
+CREATE TABLE ReservLog (
+    log_id SERIAL PRIMARY KEY,
+    reserv_id VARCHAR, --REFERENCES Tank(tank_id) NOT NULL,
     water_level INTEGER NOT NULL,
     time_stamp TIMESTAMP NOT NULL
 );
 
 CREATE TABLE DamLog (
     log_id SERIAL PRIMARY KEY,
-    dam_id INTEGER, --REFERENCES Dam(dam_id) NOT NULL,
+    dam_id VARCHAR, --REFERENCES Dam(dam_id) NOT NULL,
     water_level INTEGER NOT NULL,
     time_stamp TIMESTAMP NOT NULL
 );
