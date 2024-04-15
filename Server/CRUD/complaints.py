@@ -147,7 +147,6 @@ def nearest_location(lat, long):
         return haversine(lat, long, location['latitude'], location['longitude'])
 
     zones = execute_select("SELECT ZoneID, ST_Y(center) as latitude, ST_X(center) as longitude FROM Zones")['response']
-<<<<<<< HEAD
     print(zones)
     zone_id = min(zones, key=least_dist)['zoneid']
     print(zone_id)
@@ -155,15 +154,6 @@ def nearest_location(lat, long):
     print(locs)
     loc = min(locs, key=least_dist)
     print(loc)
-=======
-    # print(zones)
-    zone_id = min(zones, key=least_dist)['zoneid']
-    # print(zone_id)
-    locs = execute_select(f"SELECT WardID, ST_Y(center) as latitude, ST_X(center) as longitude FROM Ward WHERE ZoneID='{zone_id}'")['response']
-    # print(locs)
-    loc = min(locs, key=least_dist)
-    # print(loc)
->>>>>>> 85c1a956c6e781fd04f3e4931446ab0d3429c8fe
     return loc
 
 
@@ -176,15 +166,9 @@ def add_complaint(complaint: Complaint):
         latitude, longitude = complaint.latitude, complaint.longitude
     elif complaint.location_id and not complaint.latitude:
         location = complaint.location_id
-<<<<<<< HEAD
         print(location)
         loc_result = execute_select(f"SELECT ST_Y(center) as latitude, ST_X(center) as longitude FROM Ward WHERE WardID = '{location}'")
         print(loc_result)
-=======
-        # print(location)
-        loc_result = execute_select(f"SELECT ST_Y(center) as latitude, ST_X(center) as longitude FROM Ward WHERE WardID = '{location}'")
-        # print(loc_result)
->>>>>>> 85c1a956c6e781fd04f3e4931446ab0d3429c8fe
         if loc_result['status']=='success' and loc_result['response']:
             loc = loc_result["response"]
         else:
