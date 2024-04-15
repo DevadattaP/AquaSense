@@ -32,7 +32,7 @@ def sign_up(user: User):
     return execute_query(query, message="User signed up successfully.")
 
 
-def sign_in(login: Login):
+def login(login: Login):
     hashed_pass = hashlib.sha256(login.password.encode()).hexdigest()
 
     query = f"""

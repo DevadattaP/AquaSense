@@ -23,7 +23,7 @@ def login(login_obj: accounts.Login):
 
 @app.post("/signup")
 def signup(signup_obj: accounts.User):
-    return accounts.signup(signup_obj)
+    return accounts.sign_up(signup_obj)
 
 
 # Complaints
