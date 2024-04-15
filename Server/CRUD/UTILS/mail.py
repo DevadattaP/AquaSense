@@ -9,11 +9,11 @@ SMTP_PORT = 587
 EMAIL_SENDER = "wsupply630@gmail.com"
 EMAIL_PASSWORD = "sagw nxua qxal mgtz"
 
-def send_email(sender: str, receiver: str, subject:str, text: str):
+def send_email(receiver: str, subject:str, text: str):
     msg = EmailMessage()
     msg.set_content(text)
     msg['Subject'] = subject
-    msg['From'] = sender
+    msg['From'] = EMAIL_SENDER
     msg['To'] = receiver
 
     try:
