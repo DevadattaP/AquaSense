@@ -25,7 +25,8 @@ def get_notifications(status='LIVE'):
     query = f"""
     SELECT NotificationID, Issuer, Title, Description, NotificationDate, Is_Live 
     FROM Notifications
-    WHERE {type_dict[status]};
+    WHERE {type_dict[status]}
+    ORDER BY NotificationID ASC;
     """
 
     return execute_select(query, make_list=True)

@@ -32,7 +32,7 @@ def sign_up(user: User):
     return execute_query(query, message="User signed up successfully.")
 
 
-def sign_in(login: Login):
+def login(login: Login):
     hashed_pass = hashlib.sha256(login.password.encode()).hexdigest()
 
     query = f"""
@@ -63,4 +63,8 @@ if __name__ == "__main__":
     # "Admin": False
     # }
     # print(sign_up(User(**user_data)))
+<<<<<<< HEAD
     print(sign_in('johndoe', 'password13'))
+=======
+    # print(sign_in('johndoe', 'password13'))
+>>>>>>> 85c1a956c6e781fd04f3e4931446ab0d3429c8fe
