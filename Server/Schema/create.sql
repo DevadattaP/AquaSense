@@ -20,6 +20,7 @@ DROP TABLE IF EXISTS Applications;
 DROP TABLE IF EXISTS Notifications;
 DROP TABLE IF EXISTS Complaints;
 DROP TABLE IF EXISTS Bills;
+DROP TABLE IF EXISTS Connection_Metering;
 DROP TABLE IF EXISTS Connections;
 DROP TABLE IF EXISTS Pipelines;
 DROP TABLE IF EXISTS Node;
@@ -96,6 +97,14 @@ CREATE TABLE Connections (
     FOREIGN KEY (LocationID) REFERENCES Ward(WardID),
     FOREIGN KEY (SourceID) REFERENCES Node(NodeID),
     FOREIGN KEY (OwnerID) REFERENCES Users(Username)
+);
+
+CREATE TABLE Connection_Metering (
+    LogID SERIAL PRIMARY KEY,
+    ConnectionID INTEGER REFERENCES Connections(ConnectionID),
+    LogDate DATE NOT NULL,
+    WaterVolume FLOAT NOT NULL,
+    FOREIGN KEY (ConnectionID) REFERENCES Connections(ConnectionID)
 );
 
 CREATE TABLE Bills (

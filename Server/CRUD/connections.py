@@ -7,7 +7,6 @@ from UTILS.dataop import *
 from UTILS.mail import *
 from UTILS.locs import *
 
-
 class Connection(BaseModel):
     connection_id: Optional[int] = None
     latitude: Optional[float] = None
@@ -15,6 +14,13 @@ class Connection(BaseModel):
     location_id: Optional[int] = None
     source_id: Optional[int] = None
     owner_id: str
+
+
+class Connection_Meter(BaseModel):
+    log_id: Optional[int] = None
+    connection_id: int
+    log_date: Optional[date] = date.today()
+    volume: float
 
 
 def add_connection(connection: Connection):
@@ -74,3 +80,14 @@ def delete_connection(connection_id: int):
 
     return execute_query(query, message="Connection deleted successfully.")
 
+
+def connection_meter_entry(connection_id: int, volume: float, log_date = date.today()):
+    query = f"""
+    INSERT INTO connection_metering (ConnectionID, LogDate, WaterVolume)
+    VALUES ({connection_id}, '{log_date}', {volume});
+    """
+
+    return execute_query(query, message="Connection meter entry made successfully.")
+
+if __name__ == '__main__':
+    print(connection_meter_entry(1, 100))
