@@ -1,3 +1,3 @@
-__all__ = ['dataop']
+__all__ = ['dataop', 'mail', 'locs']
 
 # import dataop

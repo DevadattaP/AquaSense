@@ -40,17 +40,21 @@ def format_email(category: str, format: dict):
     return subject, text
 
 
-if __name__ == '__main__':
-    category = "COMPLAINT_CONFIRMATION"
-    data = {
-        "[User]": "John Doe",
-        "[ComplaintType]": "Service Issue",
-        "[ComplaintID]": "123456",
-        "[Location]": "123 Main St",
-        "[ComplaintDate]": "2024-04-04"
-    }
 
-    subject, text = format_email(category, data)
-    print("Subject:", subject)
-    print("Text:", text)
+
+if __name__ == '__main__':
+    pass
+    # category = "COMPLAINT_CONFIRMATION"
+    # data = {
+    #     "[User]": "John Doe",
+    #     "[ComplaintType]": "Service Issue",
+    #     "[ComplaintID]": "123456",
+    #     "[Location]": "123 Main St",
+    #     "[ComplaintDate]": "2024-04-04"
+    # }
+
+    # subject, text = format_email(category, data)
+    # print("Subject:", subject)
+    # print("Text:", text)
+    # send_email('test@gmail.com', 'abhyasakarita@gmail.com', 'Test Email', 'This is a test email. Paani Puravtha Vibhaag.')
 

@@ -19,6 +19,7 @@ DROP TABLE IF EXISTS ComplaintLog;
 DROP TABLE IF EXISTS Applications;
 DROP TABLE IF EXISTS Notifications;
 DROP TABLE IF EXISTS Complaints;
+DROP TABLE IF EXISTS Bills;
 DROP TABLE IF EXISTS Connections;
 DROP TABLE IF EXISTS Pipelines;
 DROP TABLE IF EXISTS Node;
@@ -95,6 +96,18 @@ CREATE TABLE Connections (
     FOREIGN KEY (LocationID) REFERENCES Ward(WardID),
     FOREIGN KEY (SourceID) REFERENCES Node(NodeID),
     FOREIGN KEY (OwnerID) REFERENCES Users(Username)
+);
+
+CREATE TABLE Bills (
+    BillID SERIAL PRIMARY KEY,
+    ConnectionID INTEGER,
+    Amount DECIMAL(10, 2),
+    BillDate DATE,
+    DueDate DATE,
+    IsPaid BOOLEAN DEFAULT FALSE,
+    PaymentDate DATE,
+    Category VARCHAR(10),
+    FOREIGN KEY (ConnectionID) REFERENCES Connection(ConnectionID)
 );
 
 CREATE TABLE Complaints (

@@ -88,5 +88,55 @@ def updateApplication(id: int, change: str, issuer: str):
     return applications.change_application(id, change, issuer)
 
 
+# Locations
+@app.get("/zones")
+def get_zones():
+    return locations.get_zones()
+
+@app.get("/wards/{zone}")
+def get_wards(zone: str):
+    return locations.get_wards(zone)
+
+@app.get("/ward/{id}")
+def get_ward_from_id(id: str):
+    return locations.get_ward_from_id(id)
+
+
+# Connections
+@app.get("/connection/{id}")
+def get_connection(id: str):
+    return connections.get_connection(id)
+
+@app.get("/connection_user/{username}")
+def get_connection_from_username(username: str):
+    return connections.get_connections_by_user(username)
+
+@app.post("/connection")
+def create_connection(connection: connections.Connection):
+    return connections.add_connection(connection)
+
+@app.delete("/connection/{id}")
+def delete_connection(id: str):
+    return connections.delete_connection(id)
+
+
+# Bills
+@app.get("/bill/{connection_id}/{month}/{year}")
+def get_bills(connection_id: int, month: int, year: int):
+    return bills.get_bill_by_connection(connection_id, month, year)
+
+@app.post("/bill")
+def create_bill(bill: bills.Bill):
+    return bills.add_bill(bill)
+
+@app.delete("/bill/{id}")
+def delete_bill(id: int):
+    return bills.delete_bill(id)
+
+@app.put("/bill_pay/{id}")
+def pay_bill(id: int):
+    return bills.pay_bill(id)
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5000)
