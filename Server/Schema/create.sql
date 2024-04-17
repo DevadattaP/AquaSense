@@ -77,14 +77,16 @@ CREATE TABLE Node (
 
 CREATE TABLE Pipelines (
     PipelineID VARCHAR PRIMARY KEY,
-    End1 VARCHAR,
-    End2 VARCHAR,
+    Source VARCHAR,
+    Sink VARCHAR,
+    Parent VARCHAR,
     Length FLOAT,
     Diameter FLOAT,
     WardID VARCHAR,
     linestring geometry(LineString, 4326),
-    FOREIGN KEY (End1) REFERENCES Node(NodeID),
-    FOREIGN KEY (End2) REFERENCES Node(NodeID),
+    FOREIGN KEY (Source) REFERENCES Node(NodeID),
+    FOREIGN KEY (Sink) REFERENCES Node(NodeID),
+    FOREIGN KEY (Parent) REFERENCES Pipelines(PipelineID),
     FOREIGN KEY (WardID) REFERENCES Ward(WardID)
 );
 
@@ -101,7 +103,7 @@ CREATE TABLE Connections (
 
 CREATE TABLE Connection_Metering (
     LogID SERIAL PRIMARY KEY,
-    ConnectionID INTEGER REFERENCES Connections(ConnectionID),
+    ConnectionID INTEGER,
     LogDate DATE NOT NULL,
     WaterVolume FLOAT NOT NULL,
     FOREIGN KEY (ConnectionID) REFERENCES Connections(ConnectionID)
@@ -116,7 +118,7 @@ CREATE TABLE Bills (
     IsPaid BOOLEAN DEFAULT FALSE,
     PaymentDate DATE,
     Category VARCHAR(10),
-    FOREIGN KEY (ConnectionID) REFERENCES Connection(ConnectionID)
+    FOREIGN KEY (ConnectionID) REFERENCES Connections(ConnectionID)
 );
 
 CREATE TABLE Complaints (
