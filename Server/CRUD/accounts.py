@@ -22,7 +22,7 @@ class Login(BaseModel):
 
 
 def sign_up(user: User):
-    hashed_pass = hashlib.sha256(user.Password.encode()).hexdigest()
+    hashed_pass = user.password
     
     query = f"""
     INSERT INTO Users (Username, Password, Email, Phone_No, Gender, LocationID, Admin)
@@ -33,7 +33,7 @@ def sign_up(user: User):
 
 
 def login(login: Login):
-    hashed_pass = hashlib.sha256(login.password.encode()).hexdigest()
+    hashed_pass = login.password
 
     query = f"""
     SELECT Password FROM Users
@@ -48,7 +48,15 @@ def login(login: Login):
     if result['response'][0]['password'] != hashed_pass:
         return {'status':'failure', 'response':{'message':'Incorrect password'} }
     
-    return {'status':'success', 'response':{'message': 'You are signed in'}}
+    user_data_query = f"""
+    SELECT Username, Email, Phone_No , Gender, LocationID, Admin
+    FROM Users
+    WHERE Username = '{login.username}'
+    """
+
+    user_data = execute_select(user_data_query)['response']
+
+    return {'status':'success', 'response':{'message': 'You are signed in', **user_data}}
 
 
 if __name__ == "__main__":

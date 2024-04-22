@@ -19,7 +19,7 @@ app.add_middleware(
 # Login and Sign Up
 @app.post("/login")
 def login(login_obj: accounts.Login):
-    return accounts.sign_in(login_obj)
+    return accounts.login(login_obj)
 
 @app.post("/signup")
 def signup(signup_obj: accounts.User):
