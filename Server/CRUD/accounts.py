@@ -22,7 +22,7 @@ class Login(BaseModel):
 
 
 def sign_up(user: User):
-    hashed_pass = user.password
+    hashed_pass = user.Password
     
     query = f"""
     INSERT INTO Users (Username, Password, Email, Phone_No, Gender, LocationID, Admin)
