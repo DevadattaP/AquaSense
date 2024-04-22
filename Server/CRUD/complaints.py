@@ -2,11 +2,13 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
 import logging
+from fastapi import UploadFile
+from os import path
 
 from UTILS.dataop import *
 from UTILS.mail import *
 from UTILS.locs import *
-
+from UTILS.file_validation import *
 
 class Complaint(BaseModel):
     complaint_id: Optional[int] = None
@@ -181,6 +183,24 @@ def add_complaint(complaint: Complaint):
 
     return result
 
+
+def add_image(file: UploadFile, filename: str):
+    try:
+        validate_file_size_type(file)
+        file_path = path.join(path.dirname(path.abspath(__file__)), filename)
+        with open(file_path, 'wb') as f:
+            f.write(file.file.read())
+        return {
+           'status':'success',
+           'response': file_path
+        }
+    except Exception as e:
+        return {
+           'status': 'error',
+           'response': str(e)
+        }
+
+    
 
 if __name__ == '__main__':
     # complaint_data_2 = {
