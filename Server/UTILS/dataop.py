@@ -4,7 +4,7 @@ DB_HOST = 'localhost'
 DB_PORT = 5432
 DB_NAME = 'AquaSense'
 DB_USER = 'postgres'
-DB_PASSWORD = 'admin'
+DB_PASSWORD = 'Spidey12345@'
 
 def get_connection():
     return pg.connect(user=DB_USER, password=DB_PASSWORD, dbname=DB_NAME, host=DB_HOST, port=DB_PORT)
