@@ -10,7 +10,6 @@ from shutil import copyfileobj
 from UTILS.dataop import *
 from UTILS.mail import *
 from UTILS.locs import *
-from UTILS.file_validation import *
 
 FILE_SIZE = 5242880
 
