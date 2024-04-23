@@ -4,11 +4,14 @@ from datetime import date, datetime
 import logging
 from fastapi import UploadFile
 from os import path
+from pathlib import Path
+from shutil import copyfileobj
 
 from UTILS.dataop import *
 from UTILS.mail import *
 from UTILS.locs import *
-from UTILS.file_validation import *
+
+FILE_SIZE = 5242880
 
 class Complaint(BaseModel):
     complaint_id: Optional[int] = None
@@ -184,12 +187,16 @@ def add_complaint(complaint: Complaint):
     return result
 
 
-def add_image(file: UploadFile, filename: str):
+def add_image(file: UploadFile):
     try:
-        validate_file_size_type(file)
-        file_path = path.join(path.dirname(path.abspath(__file__)), filename)
+        if file.content_type not in ['image/jpeg', 'image/jpg', 'image/png']:
+            raise ValueError(f"File type {file.content_type} not supported.")
+        if file.size > FILE_SIZE:
+            raise ValueError(f"File size {file.size} is too large.")
+        CRUD_path = str(path.dirname(path.abspath(__file__)))
+        file_path = f"{str(Path(CRUD_path).parent)}\\images\\{file.filename}"
         with open(file_path, 'wb') as f:
-            f.write(file.file.read())
+            copyfileobj(file.file, f)
         return {
            'status':'success',
            'response': file_path

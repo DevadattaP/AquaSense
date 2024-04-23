@@ -80,6 +80,7 @@ CREATE TABLE Pipelines (
     Source VARCHAR,
     Sink VARCHAR,
     Parent VARCHAR,
+	status BOOLEAN DEFAULT TRUE,
     Length FLOAT,
     Diameter FLOAT,
     WardID VARCHAR,
@@ -224,7 +225,7 @@ CREATE TABLE TankLog (
 CREATE TABLE PumpLog (
     log_id SERIAL PRIMARY KEY,
     pump_id VARCHAR, --REFERENCES Tank(tank_id) NOT NULL,
-    status INTEGER NOT NULL,
+    status BOOLEAN NOT NULL,
     time_stamp TIMESTAMP NOT NULL
 );
 

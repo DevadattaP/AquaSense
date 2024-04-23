@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
@@ -46,6 +46,10 @@ def updateComplaint(id: int, change: str, issuer: str):
 @app.delete("/complaint/{issuer}/{id}")
 def deleteComplaint(id: int, issuer: str):
     return complaints.delete_complaint(id, issuer)
+
+@app.post("/image")
+def createImage(file: UploadFile):
+    return complaints.add_image(file)
 
 
 # Notifications
