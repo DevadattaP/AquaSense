@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
 import logging
-from fastapi import UploadFile
+from fastapi import UploadFile, FileResponse
 from os import path
 from pathlib import Path
 from shutil import copyfileobj
@@ -212,25 +212,9 @@ def add_complaint(complaint: Complaint):
     return result
 
 
-def add_image(file: UploadFile):
-    try:
-        if file.content_type not in ['image/jpeg', 'image/jpg', 'image/png']:
-            raise ValueError(f"File type {file.content_type} not supported.")
-        if file.size > FILE_SIZE:
-            raise ValueError(f"File size {file.size} is too large.")
-        CRUD_path = str(path.dirname(path.abspath(__file__)))
-        file_path = f"{str(Path(CRUD_path).parent)}\\images\\{file.filename}"
-        with open(file_path, 'wb') as f:
-            copyfileobj(file.file, f)
-        return {
-           'status':'success',
-           'response': file_path
-        }
-    except Exception as e:
-        return {
-           'status': 'error',
-           'response': str(e)
-        }
+def get_photo(complaint_id):
+    CRUD_path = str(path.dirname(path.abspath(__file__)))
+    image_path = f"{str(Path(CRUD_path).parent)}\\images\\complaints\\{complaint_id}."
 
     
 
