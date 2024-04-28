@@ -597,7 +597,7 @@ export const adminlinks = [
     title: 'Pages',
     links: [
       {
-        name: 'Dashboard',
+        name: 'Profile',
         icon: <MdSpaceDashboard />,
       },
       {
@@ -629,11 +629,11 @@ export const userlinks = [
     title: 'Pages',
     links: [
       {
-        name: 'Dashboard',
+        name: 'Profile',
         icon: <MdSpaceDashboard />,
       },
       {
-        name: 'network',
+        name: 'Network',
         icon: <GrNetwork />,
       },
       {

@@ -8,6 +8,7 @@ import AquaDark from '../assets/img/aqua_dark.png';
 import AquaLight from '../assets/img/aqua_light1.png';
 import { useStateContext } from '../contexts/ContextProvider';
 import { FaUserTie, FaCaretDown, FaUserLock } from "react-icons/fa";
+
 // import { FaUserShield } from "react-icons/fa6";
 
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
@@ -31,7 +32,20 @@ const Navbar = ({ transparent }) => {
   const { currentColor, activeMenu, setActiveMenu, setScreenSize, screenSize, currentMode } = useStateContext();
   const { isLoggedIn, logout, isAdmin } = useAuth();
   const [showProfileTooltip, setShowProfileTooltip] = useState(false);
+  const [userInfo, setUserInfo] = useState(null); // State to hold user info
   const location = useLocation();
+
+  useEffect(() => {
+    // Extract user info from cookie
+    const userInfoCookie = document.cookie
+      .split('; ')
+      .find(cookie => cookie.startsWith('userInfo='));
+    if (userInfoCookie) {
+      const userInfoString = userInfoCookie.split('=')[1];
+      const parsedUserInfo = JSON.parse(decodeURIComponent(userInfoString));
+      setUserInfo(parsedUserInfo);
+    }
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
@@ -94,9 +108,13 @@ const Navbar = ({ transparent }) => {
         )}
       </div>
       {showProfileTooltip && (
-        <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-80 border border-blue-200">
-          <div className="flex justify-between items-center">
-            <p className="font-semibold text-lg dark:text-gray-200">User details</p>
+        <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-60 border border-blue-200">
+          <div className="flex justify-between items-center border-color  border-b-1 pb-6">
+            {/* <p className="font-semibold text-lg dark:text-gray-200">User details</p> */}
+            <div>
+              <p className="font-semibold text-xl dark:text-gray-200">{userInfo.username}</p>
+              {userInfo.admin ? <p className="text-gray-500 text-sm dark:text-gray-400">Administrator</p> : <p className="text-gray-500 text-sm dark:text-gray-400">User</p>}
+            </div>
             <button
               onClick={handleProfileClose}
               className="text-gray-500 dark:text-gray-200 hover:text-gray-700 dark:hover:text-white"
@@ -104,32 +122,12 @@ const Navbar = ({ transparent }) => {
               &#10005;
             </button>
           </div>
-          <div className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6">
-            {/* Render user profile information here */}
-            {/* <img
-              className="rounded-full h-24 w-24"
-              src={}
-              alt="user-profile"
-            /> */}
-            <div>
-              <p className="font-semibold text-xl dark:text-gray-200">Michael Roberts</p>
-              <p className="text-gray-500 text-sm dark:text-gray-400">Administrator</p>
-              {/* <p className="text-gray-500 text-sm font-semibold dark:text-gray-400">info@shop.com</p> */}
-            </div>
+          <div className="items-center mt-6 pb-6 justify-center">
+          <Link to='/dashboard/Profile'><button className="bg-transparent text-blue-500 hover:text-white w-full font-bold py-1 px-5 rounded-lg transition-colors duration-300 border border-blue-500 hover:bg-blue-500" onClick={()=>setShowProfileTooltip(false)}>
+           Edit Profile
+          </button></Link>
           </div>
-          <div className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6">
-            {/* Render user profile information here */}
-            {/* <img
-              className="rounded-full h-24 w-24"
-              src={}
-              alt="user-profile"
-            /> */}
-            <div>
-              <p className="font-semibold text-xl dark:text-gray-200">Michael Roberts</p>
-              <p className="text-gray-500 text-sm dark:text-gray-400">Administrator</p>
-              {/* <p className="text-gray-500 text-sm font-semibold dark:text-gray-400">info@shop.com</p> */}
-            </div>
-          </div>
+          
           <div>
             {/* Additional user profile options */}
             {/* You can map through userProfileData to render options */}

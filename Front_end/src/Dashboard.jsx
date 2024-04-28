@@ -11,6 +11,7 @@ import Billing from './pages/Billing';
 import { useStateContext } from './contexts/ContextProvider';
 import CustomRoute from './components/CustomRoute';
 import NewConnection from './pages/NewConnection';
+import Profile from './pages/Profile';
 
 const Dashboard = () => {
   const { setCurrentColor, setCurrentMode, currentMode, activeMenu, currentColor, themeSettings, setThemeSettings } = useStateContext();
@@ -75,11 +76,11 @@ const Dashboard = () => {
             <Routes>
               <Route path="/" element={(<Home />)} />
               <Route path="home" element={(<Home />)} />
+              <Route path="Profile" element={(<Profile />)} />
 
               {/* Pages */}
               {/* <Route path="network" element={} /> */}
-              <Route path="Notifications" element={<CustomRoute><Notificationtable /></CustomRoute>} />
-              <Route path="Current%20Status"/>   
+              <Route path="Notifications" element={<CustomRoute><Notificationtable /></CustomRoute>} />  
               <Route path="Report%20a%20Fault" element={<CustomRoute><ComplaintTable /></CustomRoute>} />
               <Route path="complaintform" element={<CustomRoute><Complaint /></CustomRoute>} />
               <Route path="New%20Connection" element={<CustomRoute><NewConnection /></CustomRoute>} />

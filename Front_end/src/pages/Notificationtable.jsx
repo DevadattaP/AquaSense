@@ -16,7 +16,7 @@ const Notificationtable = () => {
     description: '',
     notificationdate: '',
     status: 'Live', // Default status
-    issuer: ''
+    issuer: 'Sumit'
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -31,7 +31,8 @@ const Notificationtable = () => {
       description: '',
       notificationdate: '',
       status: 'Live',
-      issuer: `${issuer_u}`
+      // issuer: `${issuer_u}`
+      issuer: `Sumit`
     });
     setModalOpen(true);
   };
