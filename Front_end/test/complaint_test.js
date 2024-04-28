@@ -24,7 +24,7 @@ let complaint = {
     "complaintant": "vansh_test",
     "fault_type": "Water supply",
     "title": "Water Supply Issue",
-    "description": "There is a problem with the water supply in my area.",
+    "description": "There is a problem with the water supply in my area."
 }
 
 url = "http://127.0.0.1:5000"

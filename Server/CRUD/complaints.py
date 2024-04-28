@@ -215,7 +215,15 @@ def add_complaint(complaint: Complaint):
 
 def get_photo(complaint_id):
     CRUD_path = str(path.dirname(path.abspath(__file__)))
-    image_path = f"{str(Path(CRUD_path).parent)}\\images\\complaints\\{complaint_id}."
+    image_path = f"{str(Path(CRUD_path).parent)}\\images\\complaints\\{complaint_id}"
+
+    extensions = ['jpg', 'png', 'jpeg']
+
+    for ext in extensions:
+        if path.isfile(f"{image_path}.{ext}"):
+            return FileResponse(Path(f"{image_path}.{ext}"))
+
+
 
     
 

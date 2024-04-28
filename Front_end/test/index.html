@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let complaint = {
+            "longitude": 83.02304,
+            "latitude": 25.32559,
+            "complaintant": "vansh_test",
+            "fault_type": "Water supply",
+            "title": "Water Supply Issue",
+            "description": "There is a problem with the water supply in my area."
+            }
+
+        var formdata = new FormData();
+
+        for (var key in complaint){
+            formdata.append(key, complaint[key]);
+        }
+        
+        fetch("http://127.0.0.1:5000/complaint", {
+            body: formdata,
+            method: "POST"
+        }).then(response => response.json()
+    ).then(data => console.log(data))
+
+        fetch("http://127.0.0.1:5000/notifications/LIVE").then(response => response.json()).then(data => console.log(data))
+    </script>
+</body>
+</html>

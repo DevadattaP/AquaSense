@@ -72,9 +72,9 @@ def updateComplaint(id: int, change: str, issuer: str):
 def deleteComplaint(id: int, issuer: str):
     return complaints.delete_complaint(id, issuer)
 
-@app.post("/image")
-def createImage(file: UploadFile):
-    return complaints.add_image(file)
+@app.get("/complaint/photo/{id}")
+def getComplaintPhoto(id: int):
+    return complaints.get_photo(id)
 
 
 # Notifications
@@ -140,6 +140,13 @@ def createApplication(
 def updateApplication(id: int, change: str, issuer: str):
     return applications.change_application(id, change, issuer)
 
+@app.get("/application/id_proof/{id}")
+def getIdProof(id: int):
+    return applications.get_id_proof(id)
+
+@app.get("/application/address_proof/{id}")
+def getAddressProof(id: int):
+    return applications.get_address_proof(id)
 
 # Locations
 @app.get("/zones")

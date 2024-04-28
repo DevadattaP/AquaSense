@@ -1,4 +1,5 @@
 from fastapi import UploadFile
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
@@ -209,6 +210,29 @@ def add_application(application: Application):
         print(execute_query(log_query))
 
     return result
+
+
+def get_id_proof(application_id):
+    CRUD_path = str(path.dirname(path.abspath(__file__)))
+    image_path = f"{str(Path(CRUD_path).parent)}\\images\\applications\\idproof\\{application_id}"
+
+    extensions = ['jpg', 'png', 'jpeg']
+
+    for ext in extensions:
+        if path.isfile(f"{image_path}.{ext}"):
+            return FileResponse(Path(f"{image_path}.{ext}"))
+        
+
+def get_address_proof(application_id):
+    CRUD_path = str(path.dirname(path.abspath(__file__)))
+    image_path = f"{str(Path(CRUD_path).parent)}\\images\\applications\\addressproof\\{application_id}"
+
+    extensions = ['jpg', 'png', 'jpeg']
+
+    for ext in extensions:
+        if path.isfile(f"{image_path}.{ext}"):
+            return FileResponse(Path(f"{image_path}.{ext}"))
+
 
 
 if __name__ == '__main__':
