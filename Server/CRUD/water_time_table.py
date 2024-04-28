@@ -17,6 +17,17 @@ class TimeTable(BaseModel):
 def add_time_table(timetable: TimeTable):
     query = f"""
     INSERT INTO WaterTimetable(location_id, start_time, end_time, day_of_week)
-    VALUES ({timetable.location_id}, {timetable.start_time}, {timetable.end_time}, {timetable.day_of_week})
+    VALUES ({timetable.location_id}, {timetable.start_time}, {timetable.end_time}, {timetable.day_of_week});
     """
 
+    return execute_query(query, message='Timetable added successfully')
+
+
+def get_time_table_by_location(location_id: str):
+    query = f"""
+    SELECT *
+    FROM WaterTimetable
+    WHERE location_id = {location_id};
+    """
+    
+    return execute_select(query)

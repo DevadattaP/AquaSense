@@ -144,6 +144,15 @@ def delete_bill(id: int):
 def pay_bill(id: int):
     return bills.pay_bill(id)
 
+# Water TIme Table
+
+@app.get("/water_time_table/{location}")
+def get_water_time_table(location: str):
+    return water_time_table.get_time_table_by_location(location)
+
+@app.post("/water_time_table")
+def add_water_time_table(time_table: water_time_table.TimeTable):
+    return water_time_table.add_time_table(time_table)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5000)
