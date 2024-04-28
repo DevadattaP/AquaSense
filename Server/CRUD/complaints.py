@@ -2,7 +2,8 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
 import logging
-from fastapi import UploadFile, FileResponse
+from fastapi import UploadFile
+from fastapi.responses import FileResponse
 from os import path
 from pathlib import Path
 from shutil import copyfileobj
