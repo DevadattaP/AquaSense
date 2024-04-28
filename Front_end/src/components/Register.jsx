@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import CryptoJS from 'crypto-js';
 
 const RegisterForm = () => {
   const [locationNames, setLocationNames] = useState([]);
@@ -12,8 +13,9 @@ const RegisterForm = () => {
     Password: '',
     Email: '',
     Phone_No: '',
-    Gender: '',
-    LocationID: ''
+    Gender: 'M',
+    LocationID: '',
+    Admin: false
   });
 
   const fetchZones = async () => {
@@ -92,9 +94,12 @@ const RegisterForm = () => {
     e.preventDefault();
 
     try {
+      // Hash the password using CryptoJS
+      const hashedPassword = CryptoJS.SHA256(formData.Password).toString(CryptoJS.enc.Hex);
+
       const response = await axios.post('http://127.0.0.1:5000/signup', {
         ...formData,
-        Admin: false
+        Password: hashedPassword, // Replace the plain password with the hashed password
       });
       console.log('Registration successful:', response.data);
       // Handle success - e.g., show a success message or redirect
@@ -103,6 +108,7 @@ const RegisterForm = () => {
       // Handle error - e.g., display an error message to the user
     }
   };
+
 
   return (
     <div className="min-w-screen min-h-screen bg-gray-500 flex items-center justify-center px-2 py-2" >
@@ -119,7 +125,8 @@ const RegisterForm = () => {
                   <label htmlFor="username" className="text-xs font-semibold px-1">Username</label>
                   <div className="flex">
                     <div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center"><i className="mdi mdi-account-outline text-gray-400 text-lg"></i></div>
-                    <input id="username" type="text" title="Enter your username" className="w-full -ml-10 pl-1 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your username" />
+                    <input id="Username" type="text" title="Enter your username" className="w-full -ml-10 pl-1 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your username" value={formData.Username}
+                      onChange={handleInputChange} />
                   </div>
                 </div>
               </div>
@@ -128,7 +135,8 @@ const RegisterForm = () => {
                   <label htmlFor="password" className="text-xs font-semibold px-1">Password</label>
                   <div className="flex">
                     <div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center"><i className="mdi mdi-lock-outline text-gray-400 text-lg"></i></div>
-                    <input id="password" type="password" title="Enter your password" className="w-full -ml-10 pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your password" />
+                    <input id="Password" type="password" title="Enter your password" value={formData.Password}
+                      onChange={handleInputChange} className="w-full -ml-10 pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your password" />
                   </div>
                 </div>
               </div>
@@ -137,7 +145,8 @@ const RegisterForm = () => {
                   <label htmlFor="email" className="text-xs font-semibold px-1">Email</label>
                   <div className="flex">
                     <div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center"><i className="mdi mdi-email-outline text-gray-400 text-lg"></i></div>
-                    <input id="email" type="email" title="Enter your email" className="w-full -ml-10 pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your email" />
+                    <input id="Email" type="email" title="Enter your email" value={formData.Email}
+                      onChange={handleInputChange} className="w-full -ml-10 pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your email" />
                   </div>
                 </div>
               </div>
@@ -146,7 +155,8 @@ const RegisterForm = () => {
                   <label htmlFor="phone" className="text-xs font-semibold px-1">Phone Number</label>
                   <div className="flex">
                     <div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center"><i className="mdi mdi-phone-outline text-gray-400 text-lg"></i></div>
-                    <input id="phone" type="text" title="Enter your phone number" className="w-full -ml-10 pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your phone number" />
+                    <input id="Phone_No" type="text" value={formData.Phone_No}
+                      onChange={handleInputChange} title="Enter your phone number" className="w-full -ml-10 pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your phone number" />
                   </div>
                 </div>
               </div>
@@ -154,9 +164,10 @@ const RegisterForm = () => {
                 <div className="w-full px-3 mb-4">
                   <label htmlFor="gender" className="text-xs font-semibold px-1">Gender</label>
                   <div className="flex">
-                    <select id="gender" title="Select your gender" className="w-full pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500">
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
+                    <select id="Gender" title="Select your gender" value={formData.Gender}
+                      onChange={handleInputChange} className="w-full pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500">
+                      <option value="M">Male</option>
+                      <option value="F">Female</option>
                     </select>
                   </div>
                 </div>
