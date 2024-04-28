@@ -25,6 +25,9 @@ def login(login_obj: accounts.Login):
 def signup(signup_obj: accounts.User):
     return accounts.sign_up(signup_obj)
 
+@app.post("/change_password")
+def changePassword(chg_pwd: accounts.ChangePassword):
+    return accounts.change_password(chg_pwd)
 
 # Complaints
 @app.get("/complaints/{status}")

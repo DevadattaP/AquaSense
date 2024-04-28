@@ -279,8 +279,8 @@ CREATE TABLE PipeFlowLog(
 CREATE TABLE WaterTimetable (
     TimetableID SERIAL PRIMARY KEY,
     LocationID VARCHAR,
-    Start_Time TIME,
-    End_Time TIME,
+    Start_Time VARCHAR,
+    End_Time VARCHAR,
     AllDays BOOLEAN,
     FOREIGN KEY (LocationID) REFERENCES Ward(WardID)
 );

@@ -21,6 +21,12 @@ class Login(BaseModel):
     password: str
 
 
+class ChangePassword(BaseModel):
+    username: str
+    old_password: str
+    new_password: str
+
+
 def sign_up(user: User):
     hashed_pass = user.Password
     
@@ -57,6 +63,24 @@ def login(login: Login):
     user_data = execute_select(user_data_query)['response']
 
     return {'status':'success', 'response':{'message': 'You are signed in', **user_data}}
+
+
+def change_password(new_password: ChangePassword):
+    hashed_pass = new_password.new_password
+    query = f"""
+    UPDATE Users
+    SET Password = '{hashed_pass}'
+    WHERE Username = '{new_password.username}' AND
+    Password = '{new_password.old_password}''
+    """
+    result = execute_query(query, message="Password changed successfully.")
+    if result['status'] != 'success':
+        return {'status':'faliure', 'response':{'message': 'Some unkown error occurred'}}
+    if not result['response']:
+        return  {'status':'failure', 'response':{'message':'Wrong username or password'}}
+    
+    return result
+        
 
 
 if __name__ == "__main__":
