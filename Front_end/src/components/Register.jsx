@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const [locationNames, setLocationNames] = useState([]);
   const [zonesData, setZonesData] = useState([]);
   const [wardsData, setWardsData] = useState([]);
   const [selectedZone, setSelectedZone] = useState('');
+  const [formErrors, setFormErrors] = useState({});
   const [selectedLocation, setSelectedLocation] = useState('');
   const [formData, setFormData] = useState({
     Username: '',
@@ -93,20 +96,73 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      // Hash the password using CryptoJS
-      const hashedPassword = CryptoJS.SHA256(formData.Password).toString(CryptoJS.enc.Hex);
+    if (validateForm()) {
+      try {
+        // Hash the password using CryptoJS
+        const hashedPassword = CryptoJS.SHA256(formData.Password).toString(CryptoJS.enc.Hex);
 
-      const response = await axios.post('http://127.0.0.1:5000/signup', {
-        ...formData,
-        Password: hashedPassword, // Replace the plain password with the hashed password
-      });
-      console.log('Registration successful:', response.data);
-      // Handle success - e.g., show a success message or redirect
-    } catch (error) {
-      console.error('Error registering user:', error);
-      // Handle error - e.g., display an error message to the user
+        const response = await axios.post('http://127.0.0.1:5000/signup', {
+          ...formData,
+          Password: hashedPassword, // Replace the plain password with the hashed password
+        });
+        console.log('Registration successful:', response.data);
+        if (response.data.response === "User signed up successfully.") {
+          alert('Registration successful!');
+          navigate('/login');
+        } else {
+          alert('Registration failed!');
+        }
+        // Handle success - e.g., show a success message or redirect
+      } catch (error) {
+        console.error('Error registering user:', error);
+        // Handle error - e.g., display an error message to the user
+      }
     }
+  };
+
+  const validateForm = () => {
+    let errors = {};
+    let isValid = true;
+
+    // Validate Username
+    if (!formData.Username) {
+      errors.Username = 'Username is required';
+      isValid = false;
+    }
+
+    // Validate Password
+    if (!formData.Password) {
+      errors.Password = 'Password is required';
+      isValid = false;
+    }
+
+    // Validate Email
+    if (!formData.Email) {
+      errors.Email = 'Email is required';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.Email)) {
+      errors.Email = 'Invalid email address';
+      isValid = false;
+    }
+
+    // Validate Phone Number
+    if (!formData.Phone_No) {
+      errors.Phone_No = 'Phone number is required';
+      isValid = false;
+    }
+
+    if (!selectedZone) {
+      errors.Zone = 'Please select a zone';
+      isValid = false;
+    }
+
+    if (!selectedLocation) {
+      errors.Location = 'Please select a location';
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+    return isValid;
   };
 
 
@@ -128,6 +184,7 @@ const RegisterForm = () => {
                     <input id="Username" type="text" title="Enter your username" className="w-full -ml-10 pl-1 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your username" value={formData.Username}
                       onChange={handleInputChange} />
                   </div>
+                  {formErrors.Username && <p className="text-red-500 text-xs mt-1">{formErrors.Username}</p>}
                 </div>
               </div>
               <div className="flex -mx-3">
@@ -138,6 +195,7 @@ const RegisterForm = () => {
                     <input id="Password" type="password" title="Enter your password" value={formData.Password}
                       onChange={handleInputChange} className="w-full -ml-10 pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your password" />
                   </div>
+                  {formErrors.Password && <p className="text-red-500 text-xs mt-1">{formErrors.Password}</p>}
                 </div>
               </div>
               <div className="flex -mx-3">
@@ -148,6 +206,7 @@ const RegisterForm = () => {
                     <input id="Email" type="email" title="Enter your email" value={formData.Email}
                       onChange={handleInputChange} className="w-full -ml-10 pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your email" />
                   </div>
+                  {formErrors.Email && <p className="text-red-500 text-xs mt-1">{formErrors.Email}</p>}
                 </div>
               </div>
               <div className="flex -mx-3">
@@ -158,6 +217,7 @@ const RegisterForm = () => {
                     <input id="Phone_No" type="text" value={formData.Phone_No}
                       onChange={handleInputChange} title="Enter your phone number" className="w-full -ml-10 pl-2 pr-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-indigo-500" placeholder="Enter your phone number" />
                   </div>
+                  {formErrors.Phone_No && <p className="text-red-500 text-xs mt-1">{formErrors.Phone_No}</p>}
                 </div>
               </div>
               <div className="flex -mx-3">
@@ -190,6 +250,7 @@ const RegisterForm = () => {
                         ))}
                       </select>
                     </div>
+                    {formErrors.Zone && <p className="text-red-500 text-xs mt-1">{formErrors.Zone}</p>}
                   </div>
                 </div>
               </div>
@@ -211,6 +272,7 @@ const RegisterForm = () => {
                       ))}
                     </select>
                   </div>
+                  {formErrors.Location && <p className="text-red-500 text-xs mt-1">{formErrors.Location}</p>}
                 </div>
               </div>
 
