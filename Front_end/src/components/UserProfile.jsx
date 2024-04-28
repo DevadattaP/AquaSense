@@ -1,18 +1,25 @@
 import React from 'react';
 import { MdOutlineCancel } from 'react-icons/md';
+import { useStateContext } from '../contexts/ContextProvider';
 
 import { Button } from '.';
 import { userProfileData } from '../data/dummy';
-import { useStateContext } from '../contexts/ContextProvider';
 import avatar from '../data/avatar.jpg';
+import { useAuth } from './AuthContext';
 
 const UserProfile = () => {
   const { currentColor } = useStateContext();
+  const { isLoggedIn, logout } = useAuth();
+
+  const handleLogout = () => {
+    // setActiveMenu(false); // Close the navbar when logging out
+    logout();
+  };
 
   return (
     <div className="nav-item absolute right-1 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96">
       <div className="flex justify-between items-center">
-        <p className="font-semibold text-lg dark:text-gray-200">User Profile</p>
+        <p className="font-semibold text-lg dark:text-gray-200">User</p>
         <Button
           icon={<MdOutlineCancel />}
           color="rgb(153, 171, 180)"
@@ -59,6 +66,10 @@ const UserProfile = () => {
           borderRadius="10px"
           width="full"
         />
+        <button className="bg-transparent text-red-500 hover:text-white font-bold py-1 px-5 rounded-lg transition-colors duration-300 border border-red-500 hover:bg-red-500"
+            onClick={handleLogout} // Call handleLogout when clicking logout
+          >
+            Logout</button>
       </div>
     </div>
 
