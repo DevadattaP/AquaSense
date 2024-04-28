@@ -1,6 +1,8 @@
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+
+from typing import Optional
 
 from CRUD import *
 
@@ -39,8 +41,27 @@ def getComplaint(id):
     return complaints.get_complaint(id)
 
 @app.post("/complaint")
-def createComplaint(complaint: complaints.Complaint):
-    return complaints.add_complaint(complaint)
+def createComplaint(
+    location_id: Optional[str] = Form(None),
+    complaintant: str = Form(...),
+    latitude: Optional[float] = Form(None),
+    longitude: Optional[float] = Form(None),
+    fault_type: str = Form(...),
+    title: str = Form(...),
+    description: str = Form(...),
+    photo:Optional[UploadFile] = Form(None)
+):
+    complaint = complaints.Complaint(
+        location_id = location_id,
+        complaintant = complaintant,
+        latitude = latitude,
+        longitude = longitude,
+        fault_type = fault_type,
+        title = title,
+        description = description,
+        photo = photo 
+        )
+    return complaints.add_complaint(complaint, photo)
 
 @app.put("/complaint/{issuer}/{change}/{id}")
 def updateComplaint(id: int, change: str, issuer: str):

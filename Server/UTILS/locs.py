@@ -19,11 +19,11 @@ def nearest_location(lat, long):
         return haversine(lat, long, location['latitude'], location['longitude'])
 
     zones = execute_select("SELECT ZoneID, ST_Y(center) as latitude, ST_X(center) as longitude FROM Zones")['response']
-    print(zones)
+    # print(zones)
     zone_id = min(zones, key=least_dist)['zoneid']
-    print(zone_id)
+    # print(zone_id)
     locs = execute_select(f"SELECT WardID, ST_Y(center) as latitude, ST_X(center) as longitude FROM Ward WHERE ZoneID='{zone_id}'")['response']
-    print(locs)
+    # print(locs)
     loc = min(locs, key=least_dist)
-    print(loc)
+    # print(loc)
     return loc
