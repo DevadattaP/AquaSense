@@ -126,7 +126,7 @@ def get_wards(zone: str):
     return locations.get_wards(zone)
 
 @app.get("/ward/{id}")
-def get_ward_from_id(id: str):
+def get_ward(id: str):
     return locations.get_ward_from_id(id)
 
 
