@@ -143,7 +143,7 @@ const Billing = () => {
     <div className="container mx-auto py-8 px-4 ">
   <h1 className="text-3xl  mb-8 text-center pt-10 pb-0 pt-4" style={{ fontSize: '45px' }}>Check Your Bills</h1>
 
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
+  {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
 
     <div className="rounded-lg shadow-lg p-6 bg-gray-100">
       <h2 className="text-xl font-semibold mb-4 pb-4 text-center" style={{ fontSize: '32px' }}>User Information</h2>
@@ -226,7 +226,7 @@ const Billing = () => {
       <h2 className="text-xl font-semibold mb-4 text-center" style={{ fontSize: '32px' }}>Usage Analysis</h2>
       <canvas id="usageAnalysisChart" width="400" height="200"></canvas>
     </div>
-  </div>
+  </div> */}
 
 
 
