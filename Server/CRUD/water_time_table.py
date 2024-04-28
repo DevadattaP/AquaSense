@@ -29,5 +29,15 @@ def get_time_table_by_location(location_id: str):
     FROM WaterTimetable
     WHERE location_id = {location_id};
     """
-    
+
     return execute_select(query)
+
+
+def update_time_table(timetable: TimeTable):
+    query = f"""
+    UPDATE WaterTimetable
+    SET start_time = {timetable.start_time}, end_time = {timetable.end_time}, day_of_week = {timetable.day_of_week}
+    WHERE time_table_id = {timetable.location_id};
+    """
+
+    return execute_query(query, message='Timetable updated successfully')

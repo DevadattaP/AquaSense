@@ -154,5 +154,9 @@ def get_water_time_table(location: str):
 def add_water_time_table(time_table: water_time_table.TimeTable):
     return water_time_table.add_time_table(time_table)
 
+@app.put("/water_time_table/")
+def update_water_time_table(time_table: water_time_table.TimeTable):
+    return water_time_table.update_time_table(time_table)
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5000)
