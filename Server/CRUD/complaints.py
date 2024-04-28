@@ -135,7 +135,7 @@ def delete_complaint(id, username):
     return result
 
 
-def add_complaint(complaint: Complaint, photo=None):
+def add_complaint(complaint: Complaint):
     if complaint.location_id and complaint.latitude:
         location = complaint.location_id
         latitude, longitude = complaint.latitude, complaint.longitude
@@ -165,23 +165,25 @@ def add_complaint(complaint: Complaint, photo=None):
     location_name = execute_select(f"SELECT name FROM Ward WHERE WardID = '{location}'")['response']['name']
 
     complaint_id = execute_select("SELECT nextval('complaints_complaintid_seq')")['response']['nextval']-1
-    
-    if photo:
+
+    print(complaint.photo)
+
+    if complaint.photo:
         try:
             file_exts_dict={
                 'image/jpeg': 'jpg',
                 'image/jpg': 'jpg',
                 'image/png': 'png'
             }
-            if photo.content_type not in ['image/jpeg', 'image/jpg', 'image/png']:
-                raise ValueError(f"File type {photo.content_type} not supported.")
-            if photo.size > FILE_SIZE:
-                raise ValueError(f"File size {photo.size} is too large.")
+            if complaint.photo.content_type not in ['image/jpeg', 'image/jpg', 'image/png']:
+                raise ValueError(f"File type {complaint.photo.content_type} not supported.")
+            if complaint.photo.size > FILE_SIZE:
+                raise ValueError(f"File size {complaint.photo.size} is too large.")
             CRUD_path = str(path.dirname(path.abspath(__file__)))
-            file_path = f"{str(Path(CRUD_path).parent)}\\images\\{complaint_id}.{file_exts_dict[photo.content_type]}"
+            file_path = f"{str(Path(CRUD_path).parent)}\\images\\complaints\\{complaint_id}.{file_exts_dict[complaint.photo.content_type]}"
             print(file_path)
             with open(file_path, 'wb') as f:
-                copyfileobj(photo.file, f)
+                copyfileobj(complaint.photo.file, f)
         except Exception as e:
             return {
             'status': 'error',

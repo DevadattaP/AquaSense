@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from typing import Optional
+from datetime import datetime
 
 from CRUD import *
 
@@ -49,7 +50,7 @@ def createComplaint(
     fault_type: str = Form(...),
     title: str = Form(...),
     description: str = Form(...),
-    photo:Optional[UploadFile] = Form(None)
+    photo: Optional[UploadFile] = None
 ):
     complaint = complaints.Complaint(
         location_id = location_id,
@@ -61,7 +62,7 @@ def createComplaint(
         description = description,
         photo = photo 
         )
-    return complaints.add_complaint(complaint, photo)
+    return complaints.add_complaint(complaint)
 
 @app.put("/complaint/{issuer}/{change}/{id}")
 def updateComplaint(id: int, change: str, issuer: str):
@@ -108,8 +109,32 @@ def getApplication(id: int):
     return applications.get_application(id)
 
 @app.post("/application")
-def createApplication(application: applications.Application):
-    return applications.add_application(application)
+def createApplication(
+    userid: str = Form(...),
+    applicantname: str = Form(...),
+    applicationdate: Optional[datetime] = Form(datetime.now()),
+    connectiontype: str = Form(...),
+    connection_size: float = Form(...),
+    address: str = Form(...),
+    postal_code: str = Form(...),
+    property_number: str = Form(...),
+    status: Optional[str] = Form('PENDING'),
+    id_proof: Optional[UploadFile] = Form(None),
+    address_proof: Optional[UploadFile] = Form(None)
+):
+    return applications.add_application(applications.Application(
+        UserID=userid,
+        ApplicantName=applicantname,
+        ApplicationDate=applicationdate,
+        ConnectionType=connectiontype,
+        Connection_Size=connection_size,
+        Address=address,
+        Postal_Code=postal_code,
+        Property_Number=property_number,
+        Status=status,
+        Id_Proof=id_proof,
+        Address_Proof=address_proof
+    ))
 
 @app.put("/application/{issuer}/{change}}/{id}")
 def updateApplication(id: int, change: str, issuer: str):

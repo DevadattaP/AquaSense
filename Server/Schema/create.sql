@@ -46,6 +46,7 @@ CREATE TABLE Ward (
 CREATE TABLE Users(
     Username VARCHAR PRIMARY KEY,
     Password VARCHAR NOT NULL,
+    Name VARCHAR,
     Email VARCHAR,
     Phone_No VARCHAR,
     Gender CHAR,
@@ -150,9 +151,13 @@ CREATE TABLE Notifications (
 CREATE TABLE Applications (
     ApplicationID SERIAL PRIMARY KEY,
     UserID VARCHAR,
+    ApplicantName VARCHAR,
     ApplicationDate TIMESTAMP,
     ConnectionType VARCHAR,
+    Connection_Size FLOAT,
     Address TEXT,
+    Postal_Code VARCHAR,
+    Property_Number VARCHAR,
     Status VARCHAR,
     FOREIGN KEY (UserID) REFERENCES Users(Username)
 );

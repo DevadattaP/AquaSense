@@ -1,18 +1,32 @@
+from fastapi import UploadFile
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
 import logging
+from os import path
+from pathlib import Path
+from shutil import copyfileobj
 
 from UTILS.dataop import *
 from UTILS.mail import *
 
+
+FILE_SIZE = 5242880
+
+
 class Application(BaseModel):
     ApplicationID: Optional[int] = None
     UserID: str
-    ApplicationDate: datetime
+    ApplicantName: str
+    ApplicationDate: Optional[datetime] = datetime.now()
     ConnectionType: str
+    Connection_Size: float
     Address: str
-    Status: str
+    Postal_Code: str
+    Property_Number: str
+    Status: Optional[str] = 'PENDING'
+    Id_Proof: Optional[UploadFile] = None
+    Address_Proof: Optional[UploadFile] = None
 
 
 def get_applications(status='PENDING'):
@@ -24,7 +38,7 @@ def get_applications(status='PENDING'):
     }
 
     query = f"""
-    SELECT ApplicationID, UserID, ApplicationDate, ConnectionType, Address, Status
+    SELECT ApplicationID, UserID, ApplicantName, ApplicationDate, ConnectionType, Connection_Size, Address, Postal_Code, Property_Number, Status
     FROM Applications
     WHERE {type_dict[status]};
     """
@@ -34,7 +48,7 @@ def get_applications(status='PENDING'):
 
 def get_application(id):
     query = f"""
-    SELECT ApplicationID, UserID, ApplicationDate, ConnectionType, Address, Status
+    SELECT ApplicationId, UserID, ApplicantName, ApplicationDate, ConnectionType, Connection_Size, Address, Postal_Code, Property_Number, Status
     FROM Applications
     WHERE ApplicationID = {id};
     """
@@ -119,11 +133,58 @@ def delete_application(id, username):
 
 def add_application(application: Application):
     query = f"""
-    INSERT INTO Applications (UserID, ApplicationDate, ConnectionType, Address, Status)
-    VALUES ('{application.UserID}', '{application.ApplicationDate}', '{application.ConnectionType}', '{application.Address}', '{application.Status}');
+    INSERT INTO Applications (UserID, ApplicantName, ApplicationDate, ConnectionType, Connection_Size, 
+    Address, Postal_Code, Property_Number, Status)
+    VALUES ('{application.UserID}', '{application.ApplicantName}', '{application.ApplicationDate}', '{application.ConnectionType}', 
+    {application.Connection_Size}, '{application.Address}', '{application.Postal_Code}', 
+    '{application.Property_Number}', '{application.Status}');
     """
 
     application_id = execute_select("SELECT nextval('applications_applicationid_seq')")['response']['nextval']-1
+
+    if application.Id_Proof:
+        try:
+            file_exts_dict={
+                'image/jpeg': 'jpg',
+                'image/jpg': 'jpg',
+                'image/png': 'png'
+            }
+            if application.Id_Proof.content_type not in ['image/jpeg', 'image/jpg', 'image/png']:
+                raise ValueError(f"File type {application.Id_Proof.content_type} not supported.")
+            if application.Id_Proof.size > FILE_SIZE:
+                raise ValueError(f"File size {application.Id_Proof.size} is too large.")
+            CRUD_path = str(path.dirname(path.abspath(__file__)))
+            file_path = f"{str(Path(CRUD_path).parent)}\\images\\applications\\idproof\\{application_id}.{file_exts_dict[application.Id_Proof.content_type]}"
+            print(file_path)
+            with open(file_path, 'wb') as f:
+                copyfileobj(application.Id_Proof.file, f)
+        except Exception as e:
+            return {
+            'status': 'error',
+            'response': str(e)
+            }
+        
+    if application.Address_Proof:
+        try:
+            file_exts_dict={
+                'image/jpeg': 'jpg',
+                'image/jpg': 'jpg',
+                'image/png': 'png'
+            }
+            if application.Address_Proof.content_type not in ['image/jpeg', 'image/jpg', 'image/png']:
+                raise ValueError(f"File type {application.Address_Proof.content_type} not supported.")
+            if application.Address_Proof.size > FILE_SIZE:
+                raise ValueError(f"File size {application.Address_Proof.size} is too large.")
+            CRUD_path = str(path.dirname(path.abspath(__file__)))
+            file_path = f"{str(Path(CRUD_path).parent)}\\images\\applications\\addressproof\\{application_id}.{file_exts_dict[application.Address_Proof.content_type]}"
+            print(file_path)
+            with open(file_path, 'wb') as f:
+                copyfileobj(application.Address_Proof.file, f)
+        except Exception as e:
+            return {
+            'status': 'error',
+            'response': str(e)
+            }
 
     log_query = f"""
     INSERT INTO ApplicationLog (Timestamp, ApplicationID, ApplicationAction, Username)
@@ -138,6 +199,7 @@ def add_application(application: Application):
     "[ApplicationID]": application_id,
     "[ApplicationDate]": application.ApplicationDate
     }
+
 
     send_email(email, *format_email('APPLICATION_CONFIRMATION', formatting))
 

@@ -9,6 +9,7 @@ import hashlib
 class User(BaseModel):
     Username: str
     Password: str
+    Name: Optional[str] = None
     Email: str
     Phone_No: str
     Gender: str
@@ -31,8 +32,8 @@ def sign_up(user: User):
     hashed_pass = user.Password
     
     query = f"""
-    INSERT INTO Users (Username, Password, Email, Phone_No, Gender, LocationID, Admin)
-    VALUES ('{user.Username}', '{hashed_pass}', '{user.Email}', '{user.Phone_No}', '{user.Gender}', '{user.LocationID}', {user.Admin});
+    INSERT INTO Users (Username, Password, Name, Email, Phone_No, Gender, LocationID, Admin)
+    VALUES ('{user.Username}', '{hashed_pass}', '{user.Name}', '{user.Email}', '{user.Phone_No}', '{user.Gender}', '{user.LocationID}', {user.Admin});
     """
 
     return execute_query(query, message="User signed up successfully.")
@@ -55,7 +56,7 @@ def login(login: Login):
         return {'status':'failure', 'response':{'message':'Incorrect password'} }
     
     user_data_query = f"""
-    SELECT Username, Email, Phone_No , Gender, LocationID, Admin
+    SELECT Username, Name, Email, Phone_No , Gender, LocationID, Admin
     FROM Users
     WHERE Username = '{login.username}'
     """
@@ -85,13 +86,13 @@ def change_password(new_password: ChangePassword):
 
 if __name__ == "__main__":
     pass
-    # user_data = {
-    # "Username": "vansh_test",
-    # "Password": "password123",
-    # "Email": "abhyasakarita@gmail.com",
-    # "Phone_No": "1234567890",
-    # "Gender": "M",
-    # "LocationID": "W048",
-    # "Admin": False
-    # }
-    # print(sign_up(User(**user_data)))
+    user_data = {
+    "Username": "vansh_test1",
+    "Password": "password123",
+    "Email": "abhyasakarita@gmail.com",
+    "Phone_No": "1234567890",
+    "Gender": "M",
+    "LocationID": "W048",
+    "Admin": False
+    }
+    print(sign_up(User(**user_data)))
